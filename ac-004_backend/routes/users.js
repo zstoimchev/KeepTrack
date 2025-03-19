@@ -62,7 +62,9 @@ users.post('/login', async (req, res, next) => {
             return res.status(400).json({success: false, msg: "Password must match!"})
         }
         return res.status(200).json({
-            success: true, user: queryResult[0].email, msg: "User is logged in!"
+            success: true, user: {
+                id: queryResult[0].id, email: queryResult[0].email
+            }, msg: "User is logged in!"
         })
     } catch (err) {
         console.error(err)
