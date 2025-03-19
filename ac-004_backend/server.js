@@ -7,7 +7,9 @@ app.use(express.json());
 
 
 const users = require("./routes/users")
+const tasks = require("./routes/tasks")
 app.use('/users', users)
+app.use('/tasks', tasks)
 
 
 app.get('/', (req, res) => {
