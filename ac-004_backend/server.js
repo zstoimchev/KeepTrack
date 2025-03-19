@@ -1,16 +1,19 @@
 const express = require('express');
+const PORT = process.env.PORT || 3000;
 const app = express();
-const PORT = 3000;
+const db = require('./DB/queries');
 
-// Middleware to parse JSON requests
 app.use(express.json());
 
-// Example route
-app.get('/', (req, res) => {
-    res.json({ message: 'Hello, World!' });
-});
 
-// Start the server
+const users = require("./routes/users")
+app.use('/users', users)
+
+
+app.get('/', (req, res) => {
+    res.json({success: true, msg: "it is working dzonii"})
+})
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
