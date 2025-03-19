@@ -22,12 +22,16 @@ users.get('/all', async (req, res) => {
     }
 })
 
-users.post('/add', async (req, res) => {
+users.post('/register', async (req, res) => {
     try {
         const {name, surname, email, password} = req.body;
-        const newUser = {name, email, password};
-
+        if (!name || !surname || !email || !password) {
+            return res.status(400).json({success: false, msg: "Please enter valid data!"})
+        }
         try {
+            if (await DB.getUserByEmail(email)) {
+                return res.status(400).json({success: false, msg: "Email is already taken"});
+            }
             const queryResult = await DB.addUser(name, surname, email, password);
             if (!(queryResult.affectedRows)) {
                 return res.status(503).json({success: false, msg: "Error registering new user..."})
@@ -37,12 +41,33 @@ users.post('/add', async (req, res) => {
             console.error(err)
             return res.status(503).json({success: false, msg: "Error while adding user"})
         }
-
     } catch (err) {
         console.error(err)
         return res.status(500).json({success: false, msg: "The server snapped..."})
     }
-});
+})
 
+users.post('/login', async (req, res, next) => {
+    try {
+        const {email, password} = req.body
+        if (!email || !password) {
+            return res.status(400).json({success: false, msg: "Please enter both email & password!"})
+        }
+        let queryResult = null
+        queryResult = await DB.getUserByEmail(email)
+        if (queryResult.length <= 0) {
+            return res.status(404).json({success: false, msg: "User does not exist. Please create an account!"})
+        }
+        if (queryResult[0].password !== password) {
+            return res.status(400).json({success: false, msg: "Password must match!"})
+        }
+        return res.status(200).json({
+            success: true, user: queryResult[0].email, msg: "User is logged in!"
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({success: false, msg: `Internal server error! Try again later.`})
+    }
+})
 
 module.exports = users
