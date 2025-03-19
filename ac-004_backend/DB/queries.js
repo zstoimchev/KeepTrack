@@ -13,6 +13,15 @@ dataPool.allUsers = () => {
     })
 }
 
+dataPool.getUserByEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM User WHERE email = ?', [email], (err, res, fields) => {
+            if (err) { return reject(err) }
+            return resolve(res)
+        })
+    })
+}
+
 dataPool.allTasks = () => {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM Calendar', (err, res) => {
