@@ -57,4 +57,13 @@ dataPool.addTask = (title, user_id, date, priority) => {
     })
 }
 
+dataPool.getTasksByID = (id) => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM Calendar WHERE user_id = ?', [id], (err, res, fields) => {
+            if (err) { return reject(err) }
+            return resolve(res)
+        })
+    })
+}
+
 module.exports = dataPool
