@@ -66,4 +66,23 @@ dataPool.getTasksByID = (id) => {
     })
 }
 
+dataPool.oneTask = () => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM Calendar WHERE id = 15', (err, res, fields) => {
+            if (err) { return reject(err) }
+            return resolve(res)
+        })
+    })
+}
+
+dataPool.getTasksByDay = (date) => {
+    return new Promise((resolve, reject) => {
+        const datePattern = `${date}T%`;
+        connection.query('SELECT * FROM Calendar WHERE date LIKE ?', [datePattern], (err, res, fields) => {
+            if (err) { return reject(err) }
+            return resolve(res)
+        })
+    })
+}
+
 module.exports = dataPool
