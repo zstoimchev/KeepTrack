@@ -29,7 +29,8 @@ users.post('/register', async (req, res) => {
             return res.status(400).json({success: false, msg: "Please enter valid data!"})
         }
         try {
-            if (await DB.getUserByEmail(email)) {
+            let tmp = await DB.getUserByEmail(email)
+            if (tmp.length > 0) {
                 return res.status(400).json({success: false, msg: "Email is already taken"});
             }
             const queryResult = await DB.addUser(name, surname, email, password);
