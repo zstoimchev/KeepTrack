@@ -6,7 +6,7 @@ import './Layout.css'
 function Layout({children}) {
     return (<div className="ContainerColumn">
         <div className="AppClass">
-            <h1>test</h1>
+            {/*<h1>test</h1>*/}
             <Sidebar />
         </div>
 
