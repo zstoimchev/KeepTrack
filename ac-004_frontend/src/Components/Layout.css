@@ -5,15 +5,9 @@
     margin: 0;
 }
 
-.AppClass {
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-}
-
 .AppClass:first-child {
     flex: 1; /* Smaller portion of the space */
-    background-color: #0066cc;
+    opacity: 100%;
 }
 
 .AppClass:last-child {
@@ -21,24 +15,17 @@
     display: flex; /* Flexbox for stacking Navbar and DynamicContent */
     flex-direction: column; /* Stack children vertically */
     padding: 0; /* Ensure no extra padding inside */
+    opacity: 100%;
 }
 
 .Navbar {
-    height: 10%; /* Navbar takes 10% of the right column's height */
-    background-color: lightblue; /* Example color */
-    display: flex;
-    align-items: center; /* Centers content vertically */
     justify-content: center; /* Centers content horizontally */
     padding: 10px;
+    opacity: 100%;
 }
 
 .DynamicContent {
     flex: 1; /* Takes the remaining space in the right column */
-    background-color: darkgray;
     overflow: auto; /* Scrollable if content exceeds */
     padding: 20px;
-}
-
-h1 {
-    margin: 0;
 }
