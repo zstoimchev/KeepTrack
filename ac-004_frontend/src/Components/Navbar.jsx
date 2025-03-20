@@ -1,26 +1,29 @@
 import React from "react";
 import "./Navbar.css";
+import logo from './logo.png';
+import home from './home.png';
 
 const Navbar = () => {
     return (
-        <div className="navbar">
-            <div className="motivational-text">
-                <p>YOU GOT THIS KEEP ON MOVING</p>
-            </div>
+        <div class="header-container">
+            <header class="quote-header">
+                <h1 class="quote-text">KEEP MOVING FAM, YOU GOT THIS</h1>
+                <img src={logo} alt="Logo" class="logo" />
+            </header>
 
-            <div className="navigation">
-                <div className="nav-item">
-                    <div className="home-icon"></div>
-                    <p>PLAN YOUR DAY</p>
-                </div>
-                <div className="nav-item">
-                    <p>START DAY</p>
-                </div>
-            </div>
-            <div className="logo">
-                <div className="logo-icon"></div>
-                <p>Keep Track</p>
-            </div>
+            <header class="navbar-header">
+                <button class="navbar-tab" id="home-tab">
+                    <img src={home} alt="Home" class="navbar-icon" />
+                </button>
+
+                <button class="navbar-tab" id="next2-tab">
+                    PLAN YOUR DAY
+                </button>
+
+                <button class="navbar-tab" id="next3-tab">
+                   START YOUR DAY
+                </button>
+            </header>
         </div>
     );
 };
