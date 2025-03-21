@@ -1,10 +1,15 @@
-const express = require('express');
-const PORT = process.env.PORT || 3000;
-const app = express();
-const db = require('./DB/queries');
+const express = require('express')
+const cors = require("cors")
+const PORT = process.env.PORT || 3000
+const app = express()
+const db = require('./DB/queries')
 
 app.use(express.json());
-
+app.use(cors({
+    methods: ["GET", "POST", "DELETE"],
+    credentials: true,
+    origin: ['http://localhost:5173/'],
+}))
 
 const users = require("./routes/users")
 const tasks = require("./routes/tasks")
