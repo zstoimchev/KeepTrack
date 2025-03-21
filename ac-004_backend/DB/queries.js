@@ -16,7 +16,9 @@ dataPool.allUsers = () => {
 dataPool.getUserByEmail = (email) => {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM User WHERE email = ?', [email], (err, res) => {
-            if (err) { return reject(err) }
+            if (err) {
+                return reject(err)
+            }
             return resolve(res)
         })
     })
@@ -60,7 +62,9 @@ dataPool.addTask = (title, user_id, date, priority) => {
 dataPool.getTasksByID = (id) => {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM Calendar WHERE user_id = ?', [id], (err, res) => {
-            if (err) { return reject(err) }
+            if (err) {
+                return reject(err)
+            }
             return resolve(res)
         })
     })
@@ -69,7 +73,9 @@ dataPool.getTasksByID = (id) => {
 dataPool.oneTask = () => {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM Calendar WHERE id = 15', (err, res) => {
-            if (err) { return reject(err) }
+            if (err) {
+                return reject(err)
+            }
             return resolve(res)
         })
     })
@@ -78,7 +84,9 @@ dataPool.oneTask = () => {
 dataPool.getTasksByDay = (user_id, date) => {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM Calendar WHERE user_id = ? AND date = ?', [user_id, date], (err, res) => {
-            if (err) { return reject(err) }
+            if (err) {
+                return reject(err)
+            }
             return resolve(res)
         })
     })
@@ -87,7 +95,20 @@ dataPool.getTasksByDay = (user_id, date) => {
 dataPool.getTasksByMonth = (user_id, month) => {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM Calendar WHERE user_id = ? AND date LIKE ?', [user_id, month], (err, res) => {
-            if (err) { return reject(err) }
+            if (err) {
+                return reject(err)
+            }
+            return resolve(res)
+        })
+    })
+}
+
+dataPool.deleteTask = (id) => {
+    return new Promise((resolve, reject) => {
+        connection.query('DELETE FROM Calendar WHERE id = ?', [id], (err, res) => {
+            if (err) {
+                return reject(err)
+            }
             return resolve(res)
         })
     })

@@ -62,7 +62,7 @@ tasks.get('/get-month/', async (req, res) => {
     try {
         try {
             const {user_id, month} = req.body
-            const queryResult = await DB.getTasksByMonth(user_id, month+"%")
+            const queryResult = await DB.getTasksByMonth(user_id, month + "%")
             if (queryResult.length <= 0) {
                 return res.status(404).json({success: false, msg: "No tasks fetched..."})
             }
@@ -70,6 +70,25 @@ tasks.get('/get-month/', async (req, res) => {
         } catch (err) {
             console.error(err)
             return res.status(503).json({success: false, msg: "Error while fetching tasks"})
+        }
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({success: false, msg: "The server snapped..."})
+    }
+})
+
+tasks.delete('/delete', async (req, res) => {
+    try {
+        try {
+            const {id} = req.body
+            const queryResult = await DB.deleteTask(id)
+            if (queryResult.length <= 0) {
+                return res.status(404).json({success: false, msg: "No task deleted..."})
+            }
+            res.status(200).json({success: true, msg: "Task deleted successfully!"})
+        } catch (err) {
+            console.error(err)
+            return res.status(503).json({success: false, msg: "Error while deleting task"})
         }
     } catch (err) {
         console.error(err)
