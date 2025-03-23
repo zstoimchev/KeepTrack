@@ -1,12 +1,13 @@
 .ContainerColumn {
     display: flex;
     /*width: 100vw;*/
-    /*height: 100vh;*/
+    height: 98vh;
     margin: 0;
 }
 
 .AppClass {
     flex: 1; /* Smaller portion of the space */
+    /*height: 98vh;*/
 }
 
 .RightColumn {

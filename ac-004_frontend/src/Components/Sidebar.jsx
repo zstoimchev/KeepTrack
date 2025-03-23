@@ -1,8 +1,16 @@
 import React from "react";
 import "./Sidebar.css";
+import {useNavigate} from "react-router-dom";
 
-const Sidebar = () => {
-    return (<div className="sidebar">
+const Sidebar = ({ onLogout }) => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        onLogout();
+        navigate('/login');
+    }
+
+    return <div className="sidebar">
 
         <div className="user-section">
             <div className="user-icon"></div>
@@ -11,9 +19,9 @@ const Sidebar = () => {
 
         <div className="tasks-section">
             <p>Long-Term Tasks</p>
-            {[...Array(4)].map((_, i) => (<div key={i} className="task">
+            {[...Array(4)].map((_, i) => <div key={i} className="task">
                 TIME | TASK {i + 1}
-            </div>))}
+            </div>)}
             <div className="button-section">
                 <p>+ Add new</p>
             </div>
@@ -29,10 +37,10 @@ const Sidebar = () => {
 
         <div className="button-section">
             <p>SETTINGS</p>
-            <p>LOG OUT</p>
+            <p onClick={handleLogout}>LOG OUT</p>
         </div>
 
-    </div>);
+    </div>;
 };
 
 export default Sidebar;

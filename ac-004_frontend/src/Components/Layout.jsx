@@ -3,11 +3,11 @@ import Sidebar from './Sidebar';
 import './Layout.css'
 
 
-function Layout({children}) {
+function Layout({children, onLogout}) {
     return (<div className="ContainerColumn">
 
         <div className="AppClass">
-            <Sidebar/>
+            <Sidebar onLogout={onLogout}/>
         </div>
         <div className="RightColumn">
             <div className="Navbar">

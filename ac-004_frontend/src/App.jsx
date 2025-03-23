@@ -6,6 +6,7 @@ import StartDay from "./Pages/Startday.jsx";
 import {useState} from "react";
 import Login from "./Pages/Login.jsx";
 import Register from "./Pages/Register.jsx";
+import Sidebar from "./Components/Sidebar.jsx";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,15 +17,17 @@ function App() {
             <Route path="/register" element={<Register/>}/>
             {/* fallback for unknown paths */}
             <Route path="*" element={<Navigate to="/login" replace/>}/>
-        </Routes>) : <Layout>
-            <Routes>
-                <Route path="/" element={<Calendar/>}/>
-                <Route path="/plan" element={<PlanDay/>}/>
-                <Route path="/start" element={<StartDay/>}/>
-                {/* fallback for unknown paths */}
-                <Route path="*" element={<Navigate to="/" replace/>}/>
-            </Routes>
-        </Layout>}
+        </Routes>) : (<div>
+            {/*<Sidebar onLogout={() => setIsLoggedIn(false)}/>*/}
+            <Layout onLogout={() => setIsLoggedIn(false)}>
+                <Routes>
+                    <Route path="/" element={<Calendar onLogout={() => setIsLoggedIn(false)}/>}/>
+                    <Route path="/plan" element={<PlanDay/>}/>
+                    <Route path="/start" element={<StartDay/>}/>
+                    {/* fallback for unknown paths */}
+                    <Route path="*" element={<Navigate to="/" replace/>}/>
+                </Routes>
+            </Layout></div>)}
     </div>);
 }
 
