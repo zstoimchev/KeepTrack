@@ -17,6 +17,7 @@ function AuthLayout({children}) {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            color: 'white',
         }}>
             {children}
         </div>
