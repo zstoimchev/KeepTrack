@@ -4,11 +4,10 @@ import './Layout.css'
 
 
 function Layout({children}) {
-    return (
-    <div className="ContainerColumn">
-        
+    return (<div className="ContainerColumn">
+
         <div className="AppClass">
-            <Sidebar />
+            <Sidebar/>
         </div>
         <div className="RightColumn">
             <div className="Navbar">
@@ -16,7 +15,7 @@ function Layout({children}) {
             </div>
             <div className="Dynamic">
                 <div className="Calendar">
-                    { children }
+                    {children}
                 </div>
             </div>
         </div>
