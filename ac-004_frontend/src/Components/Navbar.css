@@ -1,18 +1,14 @@
 .header-container {
     width: 100%;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    position: absolute;
-    
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   }
   
   .quote-header {
     display: flex;
     align-items: center;
-    background-color: #333;
     color: white;
-    padding: 20px 20px;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   }
   
   .quote-text {
@@ -32,11 +28,9 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #444;
     padding: 10px 0;
   }
   
-  /* Navbar Tab (Button) Styling */
   .navbar-tab {
     background: none;
     border: none;
@@ -59,26 +53,4 @@
   .navbar-tab:hover {
     background-color: #555;
     border-radius: 5px;
-  }
-  
-  /* Optional: Active tab style */
-  .navbar-tab.active {
-    background-color: #666;
-  }
-  
-  /* Mobile Responsive */
-  @media (max-width: 768px) {
-    .quote-text {
-      font-size: 2rem; /* Adjust font size on smaller screens */
-    }
-  
-    .navbar-header {
-      flex-direction: column;
-      padding: 15px 0;
-    }
-  
-    .navbar-tab {
-      font-size: 1.5rem;
-      padding: 12px 0;
-    }
   }
