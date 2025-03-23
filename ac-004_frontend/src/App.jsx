@@ -6,7 +6,6 @@ import StartDay from "./Pages/Startday.jsx";
 import {useState} from "react";
 import Login from "./Pages/Login.jsx";
 import Register from "./Pages/Register.jsx";
-import Sidebar from "./Components/Sidebar.jsx";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
