@@ -1,6 +1,6 @@
 import {Routes, Route, Navigate} from 'react-router-dom';
 import Layout from './Components/Layout';
-import PlanDay from "./Pages/Planday.jsx";
+import PlanDay from "./Pages/PlanDay.jsx";
 import Calendar from "./Pages/Calendar.jsx";
 import StartDay from "./Pages/Startday.jsx";
 import {useState} from "react";
