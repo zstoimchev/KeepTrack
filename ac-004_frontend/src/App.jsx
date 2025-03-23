@@ -1,19 +1,16 @@
 import {Routes, Route} from 'react-router-dom';
 import Layout from './Components/Layout';
-// import Dashboard from './pages/Dashboard';
-// import Settings from './pages/Settings';
-import Page1 from './Pages/Page1';
-
-// import Page2 from './pages/Page2';
+import PlanDay from "./Pages/Planday.jsx";
+import Calendar from "./Pages/Calendar.jsx";
+import StartDay from "./Pages/Startday.jsx";
 
 function App() {
-    return (<div style={{width: '100%', height: '100vh', margin: 0}}>
+    return (<div>
         <Layout>
             <Routes>
-                {/*<Route path="/" element={<Dashboard />} />*/}
-                {/*<Route path="/settings" element={<Settings />} />*/}
-                <Route path="/page1" element={<Page1/>}/>
-                {/*<Route path="/page2" element={<Page2 />} />*/}
+                <Route path="/" element={<Calendar/>}/>
+                <Route path="/plan" element={<PlanDay/>}/>
+                <Route path="/start" element={<StartDay/>}/>
             </Routes>
         </Layout>
     </div>);

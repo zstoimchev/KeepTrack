@@ -2,8 +2,7 @@ import React from "react";
 import "./Sidebar.css";
 
 const Sidebar = () => {
-    return (
-    <div className="sidebar">
+    return (<div className="sidebar">
 
         <div className="user-section">
             <div className="user-icon"></div>
@@ -15,13 +14,13 @@ const Sidebar = () => {
             {[...Array(4)].map((_, i) => (<div key={i} className="task">
                 TIME | TASK {i + 1}
             </div>))}
-            <div  className="button-section">
+            <div className="button-section">
                 <p>+ Add new</p>
             </div>
-        
+
         </div>
 
-        
+
         <div className="date-section">
             <p>02</p>
             <p>JULY</p>

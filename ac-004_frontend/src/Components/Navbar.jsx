@@ -2,30 +2,34 @@ import React from "react";
 import "./Navbar.css";
 import logo from './logo.png';
 import home from './home.png';
+import {Link} from "react-router-dom";
 
 const Navbar = () => {
-    return (
-        <div class="header-container">
-            <header class="quote-header">
-                <h1 class="quote-text">KEEP MOVING FAM, YOU GOT THIS</h1>
-                <img src={logo} alt="Logo" class="logo" />
-            </header>
+    return (<div className="header-container">
+        <header className="quote-header">
+            <h1 className="quote-text">KEEP MOVING FAM, YOU GOT THIS</h1>
+            <img src={logo} alt="Logo" className="logo"/>
+        </header>
 
-            <header class="navbar-header">
-                <button class="navbar-tab" id="home-tab">
-                    <img src={home} alt="Home" class="navbar-icon" />
-                </button>
+        <header className="navbar-header">
+            {/*<button className="navbar-tab" id="home-tab">*/}
+            {/*    <img src={home} alt="Home" className="navbar-icon"/>*/}
+            {/*</button>*/}
 
-                <button class="navbar-tab" id="next2-tab">
-                    PLAN YOUR DAY
-                </button>
+            <Link to="/" className="navbar-tab"> <img src={home} className="navbar-icon" alt="Home"/> </Link>
+            <Link to="/plan" className="navbar-tab">PLAN YOUR DAY</Link>
+            <Link to="/start" className="navbar-tab">START YOUR DAY</Link>
 
-                <button class="navbar-tab" id="next3-tab">
-                   START YOUR DAY
-                </button>
-            </header>
-        </div>
-    );
+            {/*<button className="navbar-tab" id="next2-tab">*/}
+            {/*    PLAN YOUR DAY*/}
+            {/*</button>*/}
+
+            {/*<button className="navbar-tab" id="next3-tab">*/}
+            {/*    START YOUR DAY*/}
+            {/*</button>*/}
+
+        </header>
+    </div>);
 };
 
 export default Navbar;

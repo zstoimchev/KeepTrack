@@ -1,7 +1,7 @@
 .ContainerColumn {
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    /*width: 100vw;*/
+    /*height: 100vh;*/
     margin: 0;
 }
 
@@ -26,20 +26,4 @@
     height: 80%; /* Take full height of parent */
 }
 
-.Calendar {
-    width: 100%; /* Take full width of parent */
-    height: 100%; /* Take full height of parent */
-    padding-left: 20px;
-    padding-top: 20px;
-}
 
-.Calendar iframe {
-    width: 100%; /* Make iframe responsive */
-    height: 100%; /* Adjust height as needed */
-    border: none; /* Remove default border */
-    opacity: 100%;
-}
-
-h1 {
-    margin: 0;
-}
