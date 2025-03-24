@@ -1,107 +1,368 @@
-.DynamicContainer {
-    flex: 1; /* Takes up available space */
-    display: flex;
-    flex-direction: column;
-    height: calc(98vh - 15rem); /* Adjust height to fit within navbar and footer */
-    width: 60vw;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Ensures no content exceeds the defined area */
-}
-
-.Header {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.Header h1 {
-    font-size: 1.8rem;
-    color: #333;
-}
-
-.Header p {
-    font-size: 1rem;
-    color: #666;
-}
-
-.ScrollableTaskList {
-    flex: 1; /* Fills remaining vertical space */
-    overflow-y: auto; /* Enables scrolling */
-    padding: 0.5rem;
-    background-color: #fff;
+.PlanDayContainer {
+    font-family: 'Arial', sans-serif;
+    width: 70vw;
+    /*max-height: 50vh;*/
+    /*max-width: 100%;*/
+    /*margin: 0px 800px 0px 0px;*/
+    padding: 2px;
+    color: #000000;
+    background-color: orange;
     border-radius: 5px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.DateHeader {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #000000;
+    text-align: center;
+    font-weight: 600;
+}
+
+.TasksSection {
+    background-color: purple;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-height: 35vh;
+    overflow-y: auto;
+}
+
+.TasksSection::-webkit-scrollbar {
+    width: 8px;
+}
+
+.TasksSection::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.TasksSection::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.TasksSection::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.TasksSection {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.TasksSection h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #000000;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 10px;
+    font-weight: 500;
+}
+
+.TaskList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .TaskItem {
     display: flex;
-    justify-content: space-between;
-    background-color: #fff;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-size: 16px;
+    transition: background-color 0.2s;
 }
 
-.TaskItem p {
-    margin: 0;
-    font-size: 1rem;
-    color: #333;
+.TaskItem:hover {
+    background-color: rgba(248, 175, 86, 0.2);
 }
 
-.AddTaskButton {
-    text-align: center;
-    background-color: #4caf50;
-    color: #fff;
-    padding: 0.5rem;
-    border-radius: 5px;
+.TaskItem:last-child {
+    border-bottom: none;
+}
+
+.TaskCheckbox {
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
     cursor: pointer;
+    accent-color: #FF8C00;
+}
+
+.TaskName {
+    flex: 1;
+    margin-left: 5px;
+}
+
+.TaskItem.low .TaskName {
+    color: #17c700;
+}
+
+.TaskItem.medium .TaskName {
+    color: #f8d01b;
+}
+
+.TaskItem.high .TaskName {
+    color: #ff0000;
+}
+
+.TaskItem.completed .TaskName {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.AddButton {
+    background: none;
+    border: none;
+    color: #000000;
     font-weight: bold;
+    cursor: pointer;
+    padding: 5px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
 }
 
-.AddTaskButton:hover {
-    background-color: #45a049;
+.AddButton:hover {
+    text-decoration: underline;
 }
 
-/* Scrollbar styling (optional) */
-.ScrollableTaskList::-webkit-scrollbar {
-    width: 8px;
-}
-
-.ScrollableTaskList::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-}
-
-.ScrollableTaskList::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa;
-}
-
-.ProgressTracker {
-    margin-top: 1rem;
+.ProgressSection {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 25px;
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.ProgressTracker p {
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #666;
+.ProgressSection h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #000000;
+    font-weight: 500;
 }
 
-.ProgressBar {
-    background-color: #ddd;
-    height: 1rem;
-    border-radius: 5px;
+.ProgressBarContainer {
+    height: 12px;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    margin: 20px 0;
     overflow: hidden;
-    position: relative;
 }
 
-.Progress {
-    background-color: #4caf50;
+.MultiColorProgress {
+    display: flex;
     height: 100%;
-    width: 0%;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ProgressSegment {
+    height: 100%;
     transition: width 0.3s ease;
+}
+
+.ProgressSegment.low {
+    background-color: #17c700;
+}
+
+.ProgressSegment.medium {
+    background-color: #f8d01b;
+}
+
+.ProgressSegment.high {
+    background-color: #ff0000;
+}
+
+.ProgressText {
+    font-size: 18px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.PriorityLegend {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.LegendItem {
+    display: flex;
+    align-items: center;
+}
+
+.LegendItem:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    border-radius: 2px;
+}
+
+.LegendItem.high:before {
+    background-color: #17c700;
+}
+
+.LegendItem.medium:before {
+    background-color: #f8d01b;
+}
+
+.LegendItem.low:before {
+    background-color: #ff0000;
+}
+
+.Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ModalContent {
+    background-color: #FFFFFF;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.ModalHeader h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.CloseButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000000;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 0 5px;
+}
+
+.CloseButton:hover {
+    color: #FF8C00;
+}
+
+.FormGroup {
+    padding: 15px 20px;
+}
+
+.FormGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #000000;
+    font-size: 14px;
+}
+
+.FormGroup input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.FormGroup input:focus {
+    outline: none;
+    border-color: #FF8C00;
+    box-shadow: 0 0 0 2px rgba(255,140,0,0.2);
+}
+
+.PriorityOptions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.PriorityButton {
+    flex: 1;
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.PriorityButton:hover {
+    background-color: rgba(248, 175, 86, 0.2);
+}
+
+.PriorityButton.active {
+    background-color: #FF8C00;
+    color: white;
+    border-color: #FF8C00;
+}
+
+.ModalActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    gap: 10px;
+}
+
+.CancelButton {
+    padding: 10px 20px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.CancelButton:hover {
+    background-color: rgba(248, 175, 86, 0.2);
+}
+
+.SubmitButton {
+    padding: 10px 20px;
+    background-color: #FF8C00;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.SubmitButton:hover {
+    background-color: #C76E00;
 }

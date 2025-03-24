@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 const Navbar = () => {
     return (<div className="header-container">
         <header className="quote-header">
-            <h1 className="quote-text">KEEP MOVING FAM, YOU GOT THIS</h1>
+            <h1 className="quote-text">FAILURE IS SUCCESS IN PROGRESS!</h1>
             <img src={logo} alt="Logo" className="logo"/>
         </header>
 
