@@ -161,8 +161,10 @@ function PlanDay() {
                 </li>
             </ul>)}
         </div>
-
-
+        <button className="AddButton nnnm" onClick={openModal}>
+            + Add new task
+        </button>
+        <hr className="AddTaskSeparator"/>
         <div className="ProgressSection">
             <h2>Progress Tracker for today</h2>
             <div className="ProgressBarContainer">
