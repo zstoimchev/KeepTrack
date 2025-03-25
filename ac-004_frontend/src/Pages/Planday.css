@@ -366,3 +366,32 @@
 .SubmitButton:hover {
     background-color: #C76E00;
 }
+
+.TaskItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    position: relative; /* Required for button positioning */
+}
+
+.TaskItem:hover .DeleteButton {
+    display: block; /* Make the button visible on hover */
+}
+
+.DeleteButton {
+    display: none; /* Hidden by default */
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    position: absolute; /* Positioning within the div */
+    right: 10px;
+}
+
+.DeleteButton:hover {
+    background-color: #c0392b; /* Darker shade on hover */
+}

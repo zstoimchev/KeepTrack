@@ -98,6 +98,20 @@ function PlanDay() {
         return (completedCount / priorityTasks.length) * 100;
     };
 
+    const deleteTask = async (id) => {
+        try {
+            const response = await axios.delete(`http://localhost:3000/tasks/delete/${id}`);
+            if (response.status === 200) {
+                // Filter out the deleted task from the state
+                setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+            } else {
+                alert(response.data.msg || "Failed to delete task.");
+            }
+        } catch (error) {
+            console.error("Error deleting task:", error?.response?.data || error.message);
+        }
+    };
+
     return (<div className="PlanDayContainer">
         <h1 className="DateHeader">02 July 2021</h1>
 
@@ -117,6 +131,12 @@ function PlanDay() {
                     <span className="TaskName">
                         {task.title}: {task.priority}, {task.duration} minutes
                     </span>
+                    <button
+                        className="DeleteButton"
+                        onClick={() => deleteTask(task.id)}
+                    >
+                        Delete
+                    </button>
                 </li>))}
                 <li className="TaskItem add-new">
                     <button className="AddButton" onClick={openModal}>

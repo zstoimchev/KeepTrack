@@ -77,10 +77,10 @@ tasks.get('/get-month/', async (req, res) => {
     }
 })
 
-tasks.delete('/delete', async (req, res) => {
+tasks.delete('/delete/:id', async (req, res) => {
     try {
         try {
-            const {id} = req.body
+            const {id} = req.params
             const queryResult = await DB.deleteTask(id)
             if (queryResult.length <= 0) {
                 return res.status(404).json({success: false, msg: "No task deleted..."})
