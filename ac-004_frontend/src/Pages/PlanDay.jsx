@@ -1,18 +1,37 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Planday.css';
+import axios from "axios";
 
 function PlanDay() {
-    const [tasks, setTasks] = useState([
-        { id: 1, name: 'Math', priority: 'Low', duration: '30 min', completed: false },
-        { id: 2, name: 'Programming', priority: 'High', duration: '1 hour', completed: false },
-    ]);
-
+    const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
-        name: '',
-        priority: 'Low',
-        duration: ''
+        name: '', priority: 'Low', duration: ''
     });
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const user_id = localStorage.getItem("id");
+                const date = '2025-03-25';
+                const response = await axios.post("http://localhost:3000/tasks/get-date", {user_id, date});
+                if (response.status === 200) {
+                    setTasks(response.data.tasks.map(task => ({
+                        id: task.id || null,
+                        title: task.title || 'Untitled Task',
+                        priority: task.priority || 'Low',
+                        duration: task.duration || '0',
+                        completed: task.completed || false
+                    })));
+                } else {
+                    alert(response.data.msg);
+                }
+            } catch (error) {
+                console.error('Error fetching tasks:', error?.response?.data || error.message);
+            }
+        };
+        fetchTasks();
+    }, []); // Empty dependency array ensures it runs once after initial render
 
     const openModal = () => {
         setShowModal(true);
@@ -21,31 +40,28 @@ function PlanDay() {
     const closeModal = () => {
         setShowModal(false);
         setNewTask({
-            name: '',
-            priority: 'Low',
-            duration: ''
+            name: '', priority: 'Low', duration: ''
         });
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setNewTask(prev => ({
-            ...prev,
-            [name]: value
+            ...prev, [name]: value
         }));
     };
 
     const handlePriorityChange = (priority) => {
         setNewTask(prev => ({
-            ...prev,
-            priority
+            ...prev, priority
         }));
     };
 
     const toggleTaskCompletion = (id) => {
-        setTasks(tasks.map(task =>
-            task.id === id ? {...task, completed: !task.completed} : task
-        ));
+        // setTasks(tasks.map(task => task.id === id ? {...task, completed: !task.completed} : task));
+        setTasks(tasks.map(task => ({
+            ...task, completed: task.id === id ? !task.completed : task.completed
+        })));
     };
 
     const handleSubmit = (e) => {
@@ -76,128 +92,118 @@ function PlanDay() {
         return (completedCount / priorityTasks.length) * 100;
     };
 
-    return (
-        <div className="PlanDayContainer">
-            <h1 className="DateHeader">02 July 2021</h1>
+    return (<div className="PlanDayContainer">
+        <h1 className="DateHeader">02 July 2021</h1>
 
-            <div className="TasksSection">
-                <h2>Tasks for the day: Time Period</h2>
-                <ul className="TaskList">
-                    {tasks.map(task => (
-                        <li key={task.id} className={`TaskItem ${task.priority.toLowerCase()} ${task.completed ? 'completed' : ''}`}>
-                            <input
-                                type="checkbox"
-                                checked={task.completed}
-                                onChange={() => toggleTaskCompletion(task.id)}
-                                className="TaskCheckbox"
-                            />
-                            <span className="TaskName">
-                                {task.name}: {task.priority} {task.duration}
-                            </span>
-                        </li>
-                    ))}
-                    <li className="TaskItem add-new">
-                        <button className="AddButton" onClick={openModal}>
-                            + Add new:
-                        </button>
-                    </li>
-                </ul>
-            </div>
-
-            <div className="ProgressSection">
-                <h2>Progress Tracker for today</h2>
-                <div className="ProgressBarContainer">
-                    <div className="MultiColorProgress">
-                        {['High', 'Medium', 'Low'].map(priority => (
-                            <div
-                                key={priority}
-                                className={`ProgressSegment ${priority.toLowerCase()}`}
-                                style={{
-                                    width: `${calculatePriorityProgress(priority)}%`,
-                                    backgroundColor:
-                                        priority === 'High' ? '#e74c3c' :
-                                            priority === 'Medium' ? '#f39c12' :
-                                                '#27ae60'
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
-                <div className="ProgressText">
-                    {Math.round(calculateProgress())}% completed
-                    <div className="PriorityLegend">
-                        <span className="LegendItem high">High</span>
-                        <span className="LegendItem medium">Medium</span>
-                        <span className="LegendItem low">Low</span>
-                    </div>
-                </div>
-            </div>
-
-            {showModal && (
-                <div className="Modal">
-                    <div className="ModalContent">
-                        <div className="ModalHeader">
-                            <h3>Add New Task</h3>
-                            <button className="CloseButton" onClick={closeModal}>×</button>
-                        </div>
-
-                        <form onSubmit={handleSubmit}>
-                            <div className="FormGroup">
-                                <label htmlFor="taskName">Task Name</label>
-                                <input
-                                    id="taskName"
-                                    type="text"
-                                    name="name"
-                                    value={newTask.name}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter task name"
-                                    required
-                                />
-                            </div>
-
-                            <div className="FormGroup">
-                                <label>Priority</label>
-                                <div className="PriorityOptions">
-                                    {['Low', 'Medium', 'High'].map(level => (
-                                        <button
-                                            key={level}
-                                            type="button"
-                                            className={`PriorityButton ${newTask.priority === level ? 'active' : ''}`}
-                                            onClick={() => handlePriorityChange(level)}
-                                        >
-                                            {level}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="FormGroup">
-                                <label htmlFor="duration">Duration</label>
-                                <input
-                                    id="duration"
-                                    type="text"
-                                    name="duration"
-                                    value={newTask.duration}
-                                    onChange={handleInputChange}
-                                    placeholder="e.g. 30 min, 1 hour"
-                                    required
-                                />
-                            </div>
-
-                            <div className="ModalActions">
-                                <button type="button" className="CancelButton" onClick={closeModal}>
-                                    Cancel
-                                </button>
-                                <button type="submit" className="SubmitButton">
-                                    Add Task
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+        <div className="TasksSection">
+            <h2>Tasks for the day: Time Period</h2>
+            <ul className="TaskList">
+                {tasks.map((task) => (<li
+                    key={task.id}
+                    className={`TaskItem ${task.priority && typeof task.priority === 'string' ? task.priority.toLowerCase() : ''} ${task.completed ? 'completed' : ''}`}
+                >
+                    <input
+                        type="checkbox"
+                        checked={task.completed} // TODO: call API to mark complete
+                        onChange={() => toggleTaskCompletion(task.id)}
+                        className="TaskCheckbox"
+                    />
+                    <span className="TaskName">
+                        {task.title}: {task.priority}, {task.duration} minutes
+                    </span>
+                </li>))}
+                <li className="TaskItem add-new">
+                    <button className="AddButton" onClick={openModal}>
+                        + Add new:
+                    </button>
+                </li>
+            </ul>
         </div>
-    );
+
+        <div className="ProgressSection">
+            <h2>Progress Tracker for today</h2>
+            <div className="ProgressBarContainer">
+                <div className="MultiColorProgress">
+                    {['High', 'Medium', 'Low'].map(priority => (<div
+                        key={priority}
+                        className={`ProgressSegment ${priority.toLowerCase()}`}
+                        style={{
+                            width: `${calculatePriorityProgress(priority)}%`,
+                            backgroundColor: priority === 'High' ? '#e74c3c' : priority === 'Medium' ? '#f39c12' : '#27ae60'
+                        }}
+                    />))}
+                </div>
+            </div>
+            <div className="ProgressText">
+                {Math.round(calculateProgress())}% completed
+                <div className="PriorityLegend">
+                    <span className="LegendItem high">High</span>
+                    <span className="LegendItem medium">Medium</span>
+                    <span className="LegendItem low">Low</span>
+                </div>
+            </div>
+        </div>
+
+        {showModal && (<div className="Modal">
+            <div className="ModalContent">
+                <div className="ModalHeader">
+                    <h3>Add New Task</h3>
+                    <button className="CloseButton" onClick={closeModal}>×</button>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="FormGroup">
+                        <label htmlFor="taskName">Task Name</label>
+                        <input
+                            id="taskName"
+                            type="text"
+                            name="name"
+                            value={newTask.name}
+                            onChange={handleInputChange}
+                            placeholder="Enter task name"
+                            required
+                        />
+                    </div>
+
+                    <div className="FormGroup">
+                        <label>Priority</label>
+                        <div className="PriorityOptions">
+                            {['Low', 'Medium', 'High'].map(level => (<button
+                                key={level}
+                                type="button"
+                                className={`PriorityButton ${newTask.priority === level ? 'active' : ''}`}
+                                onClick={() => handlePriorityChange(level)}
+                            >
+                                {level}
+                            </button>))}
+                        </div>
+                    </div>
+
+                    <div className="FormGroup">
+                        <label htmlFor="duration">Duration</label>
+                        <input
+                            id="duration"
+                            type="text"
+                            name="duration"
+                            value={newTask.duration}
+                            onChange={handleInputChange}
+                            placeholder="e.g. 30 min, 1 hour"
+                            required
+                        />
+                    </div>
+
+                    <div className="ModalActions">
+                        <button type="button" className="CancelButton" onClick={closeModal}>
+                            Cancel
+                        </button>
+                        <button type="submit" className="SubmitButton">
+                            Add Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>)}
+    </div>);
 }
 
 export default PlanDay;
