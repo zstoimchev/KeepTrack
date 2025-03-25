@@ -6,30 +6,31 @@ function PlanDay() {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
-        name: '', priority: 'Low', duration: ''
+        title: '', priority: 'Low', duration: ''
     });
 
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const user_id = localStorage.getItem("id");
-                const date = '2025-03-25';
-                const response = await axios.post("http://localhost:3000/tasks/get-date", {user_id, date});
-                if (response.status === 200) {
-                    setTasks(response.data.tasks.map(task => ({
-                        id: task.id || null,
-                        title: task.title || 'Untitled Task',
-                        priority: task.priority || 'Low',
-                        duration: task.duration || '0',
-                        completed: task.completed || false
-                    })));
-                } else {
-                    alert(response.data.msg);
-                }
-            } catch (error) {
-                console.error('Error fetching tasks:', error?.response?.data || error.message);
+    const fetchTasks = async () => {
+        try {
+            const user_id = localStorage.getItem("id");
+            const date = '2025-03-25'; // TODO: get the correct date (either today or from calendar...)
+            const response = await axios.post("http://localhost:3000/tasks/get-date", {user_id, date});
+            if (response.status === 200) {
+                setTasks(response.data.tasks.map(task => ({
+                    id: task.id || null,
+                    title: task.title || 'Untitled Task',
+                    priority: task.priority || 'Low',
+                    duration: task.duration || '0',
+                    completed: task.completed || false
+                })));
+            } else {
+                alert(response.data.msg);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching tasks:', error?.response?.data || error.message);
+        }
+    };
+
+    useEffect(() => {
         fetchTasks();
     }, []); // Empty dependency array ensures it runs once after initial render
 
@@ -40,7 +41,7 @@ function PlanDay() {
     const closeModal = () => {
         setShowModal(false);
         setNewTask({
-            name: '', priority: 'Low', duration: ''
+            title: '', priority: 'Low', duration: ''
         });
     };
 
@@ -64,20 +65,25 @@ function PlanDay() {
         })));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newTask.name.trim() || !newTask.duration.trim()) return;
+        if (!newTask.title.trim() || !newTask.duration.trim()) return;
+        try {
+            const user_id = localStorage.getItem("id");
+            const date = '2025-03-25'; // TODO: correct date?...
+            const response = await axios.post("http://localhost:3000/tasks/add", {
+                user_id, title: newTask.title, date, priority: newTask.priority, duration: newTask.duration,
+            });
 
-        const taskToAdd = {
-            id: tasks.length + 1,
-            name: newTask.name,
-            priority: newTask.priority,
-            duration: newTask.duration,
-            completed: false
-        };
-
-        setTasks([...tasks, taskToAdd]);
-        closeModal();
+            if (response.status === 201) {
+                closeModal();
+                fetchTasks(); // Fetch the updated task list
+            } else {
+                alert(response.data.msg || "Failed to add task.");
+            }
+        } catch (error) {
+            console.error("Error adding task:", error?.response?.data || error.message);
+        }
     };
 
     const calculateProgress = () => {
@@ -157,8 +163,8 @@ function PlanDay() {
                         <input
                             id="taskName"
                             type="text"
-                            name="name"
-                            value={newTask.name}
+                            name="title"
+                            value={newTask.title}
                             onChange={handleInputChange}
                             placeholder="Enter task name"
                             required
