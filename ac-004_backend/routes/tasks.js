@@ -4,9 +4,9 @@ const DB = require('../DB/queries')
 
 tasks.post('/add', async (req, res) => {
     try {
-        const {title, user_id, date, priority} = req.body
+        const {title, user_id, date, priority, duration} = req.body
         try {
-            const queryResult = await DB.addTask(title, user_id, date, priority)
+            const queryResult = await DB.addTask(title, user_id, date, priority, duration)
             if (!(queryResult.affectedRows)) {
                 return res.status(503).json({success: false, msg: "Error adding new task..."})
             }
@@ -39,7 +39,7 @@ tasks.get('/get-user/', async (req, res) => {
     }
 })
 
-tasks.get('/get-date/', async (req, res) => {
+tasks.post('/get-date/', async (req, res) => {
     try {
         try {
             const {user_id, date} = req.body
