@@ -63,11 +63,9 @@ function PlanDay() {
             const response = await axios.put(`http://localhost:3000/tasks/update-completion/${id}`);
 
             if (response.status === 200) {
-                setTasks(prevTasks =>
-                    prevTasks.map(task =>
-                        task.id === id ? { ...task, completed: !currentStatus } : task
-                    )
-                );
+                setTasks(prevTasks => prevTasks.map(task => task.id === id ? {
+                    ...task, completed: !currentStatus
+                } : task));
             } else {
                 alert(response.data.msg || "Failed to update task status.");
             }
@@ -128,7 +126,14 @@ function PlanDay() {
 
         <div className="TasksSection">
             <h2>Tasks for the day: Time Period</h2>
-            <ul className="TaskList">
+            {tasks.length === 0 ? (<div className="NoTasksMessage">
+                <p>No tasks for today. Add new tasks to kickstart your day!</p>
+                <li className="TaskItem add-new">
+                    <button className="AddButton" onClick={openModal}>
+                        + Add new:
+                    </button>
+                </li>
+            </div>) : (<ul className="TaskList">
                 {tasks.map((task) => (<li
                     key={task.id}
                     className={`TaskItem ${task.priority && typeof task.priority === 'string' ? task.priority.toLowerCase() : ''} ${task.completed ? 'completed' : ''}`}
@@ -154,8 +159,9 @@ function PlanDay() {
                         + Add new:
                     </button>
                 </li>
-            </ul>
+            </ul>)}
         </div>
+
 
         <div className="ProgressSection">
             <h2>Progress Tracker for today</h2>
