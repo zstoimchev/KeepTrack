@@ -1,93 +1,152 @@
-import React, {useState, useEffect} from "react";
-import "./Startday.css";
+// Startday.jsx
+import React, { useState, useEffect } from 'react';
+import './Startday.css';
 
-const StartDay = () => {
-    const [timeRemaining, setTimeRemaining] = useState({hours: 2, minutes: 30});
-    const [isRunning, setIsRunning] = useState(false);
+const Startday = () => {
+  const [activeTab, setActiveTab] = useState('Focus Time');
+  const [timeLeft, setTimeLeft] = useState(1500); // 25 minutes in seconds
+  const [isRunning, setIsRunning] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [minutes, setMinutes] = useState(25);
+  const [seconds, setSeconds] = useState(0);
 
-    useEffect(() => {
-        let interval;
-        if (isRunning) {
-            interval = setInterval(() => {
-                setTimeRemaining((prev) => {
-                    if (prev.minutes === 0 && prev.hours === 0) {
-                        return {hours: 0, minutes: 0};
-                    }
-                    if (prev.minutes === 0) {
-                        return {hours: prev.hours - 1, minutes: 59};
-                    }
-                    return {...prev, minutes: prev.minutes - 1};
-                });
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [isRunning]);
+  const timerPresets = {
+    'Focus Time': 1500,
+    'Short Break': 300,
+    'Long Break': 900
+  };
 
-    useEffect(() => {
-        if (timeRemaining.hours === 0 && timeRemaining.minutes === 0) {
+  useEffect(() => {
+    let interval;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 0) {
+            clearInterval(interval);
             setIsRunning(false);
-        }
-    }, [timeRemaining]);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning]);
 
-    return (
-        <div className="container">
-            {/* Current Task Section */}
-            <div className="taskSection">
-                <h2 className="heading">CURRENT TASK</h2>
-                <div className="taskName">Study for exam</div>
+  const formatTime = (totalSeconds) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
 
-                <div className="durationText">
-                    <div className="timeContainer">
-                        <span className="numberBox">2</span>
-                        <span>Hours</span>
-                    </div>
-                    <div className="timeContainer">
-                        <span className="numberBox">30</span>
-                        <span>Minutes</span>
-                    </div>
-                </div>
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setTimeLeft(timerPresets[tab]);
+    setIsRunning(false);
+    setIsEditing(false);
+  };
 
-                <div className="breaksControl">NUMBER OF BREAKS (DEFAULT 2)</div>
+  const handleSaveTime = () => {
+    const totalSeconds = (minutes * 60) + seconds;
+    if (totalSeconds > 0) {
+      setTimeLeft(totalSeconds);
+    }
+    setIsEditing(false);
+    setIsRunning(false);
+  };
 
-                <button
-                    className="startButton"
-                    onClick={() => setIsRunning(!isRunning)}
-                >
-                    {isRunning ? "PAUSE" : "START"}
-                </button>
+  return (
+    <div className="startday-container">
+      <div className="startday-tabs">
+        {Object.keys(timerPresets).map((tab) => (
+          <button
+            key={tab}
+            className={`startday-tab-button ${activeTab !== tab ? 'inactive' : ''}`}
+            onClick={() => handleTabChange(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
 
-                <div className="timeRemaining">
-                    TIME TO FINISH TASK:{" "}
-                    <span className="numberBox">
-                    {timeRemaining.hours.toString().padStart(2, "0")}:
-                        {timeRemaining.minutes.toString().padStart(2, "0")}
-                </span>
-                </div>
+      <div className="startday-timer-display">
+        {formatTime(timeLeft)}
+      </div>
+
+      <div className="startday-button-container">
+        <button
+          className="startday-main-button"
+          style={{ backgroundColor: '#e74c3c', color: 'white' }}
+          onClick={() => setIsRunning(!isRunning)}
+        >
+          {isRunning ? 'PAUSE' : 'START'}
+        </button>
+
+        {!isEditing ? (
+          <button
+            className="startday-main-button"
+            style={{ backgroundColor: '#666', color: 'white' }}
+            onClick={() => {
+              const mins = Math.floor(timeLeft / 60);
+              const secs = timeLeft % 60;
+              setMinutes(mins);
+              setSeconds(secs);
+              setIsEditing(true);
+            }}
+          >
+            CHANGE TIME
+          </button>
+        ) : (
+          <div className="startday-edit-container">
+            <div className="startday-input-group">
+              <div className="startday-time-input-container">
+                <span className="startday-input-label">Minutes</span>
+                <input
+                  type="number"
+                  className="startday-time-input"
+                  value={minutes}
+                  onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
+                  min="0"
+                />
+              </div>
+              <div className="startday-time-input-container">
+                <span className="startday-input-label">Seconds</span>
+                <input
+                  type="number"
+                  className="startday-time-input"
+                  value={seconds}
+                  onChange={(e) => {
+                    let value = parseInt(e.target.value) || 0;
+                    value = Math.min(59, Math.max(0, value));
+                    setSeconds(value);
+                  }}
+                  min="0"
+                  max="59"
+                />
+              </div>
             </div>
 
-            {/* Next Task Section */}
-            <div className="taskSection">
-                <h2 className="heading">NEXT TASK</h2>
-                <div className="taskName">Do Homework</div>
-
-                <div className="durationText">
-                    <div className="timeContainer">
-                        <span className="numberBox">0</span>
-                        <span>Hours</span>
-                    </div>
-                    <div className="timeContainer">
-                        <span className="numberBox">15</span>
-                        <span>Minutes</span>
-                    </div>
-                </div>
-
-                <div className="breaksControl" style={{ marginTop: "15px" }}>
-                    INCOMING BREAK
-                </div>
+            <div className="startday-action-buttons">
+              <button
+                className="startday-main-button"
+                style={{ backgroundColor: '#4CAF50', flex: 1, maxWidth: '120px' }}
+                onClick={handleSaveTime}
+              >
+                SAVE
+              </button>
+              <button
+                className="startday-main-button"
+                style={{ backgroundColor: '#666', flex: 1, maxWidth: '120px' }}
+                onClick={() => setIsEditing(false)}
+              >
+                CANCEL
+              </button>
             </div>
-        </div>
-    );
-
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
-export default StartDay;
+export default Startday;
