@@ -20,7 +20,7 @@ function PlanDay() {
                     title: task.title || 'Untitled Task',
                     priority: task.priority || 'Low',
                     duration: task.duration || '0',
-                    completed: task.completed || false
+                    completed: task.is_finished || false
                 })));
             } else {
                 alert(response.data.msg);
@@ -58,11 +58,22 @@ function PlanDay() {
         }));
     };
 
-    const toggleTaskCompletion = (id) => {
-        // setTasks(tasks.map(task => task.id === id ? {...task, completed: !task.completed} : task));
-        setTasks(tasks.map(task => ({
-            ...task, completed: task.id === id ? !task.completed : task.completed
-        })));
+    const toggleTaskCompletion = async (id, currentStatus) => {
+        try {
+            const response = await axios.put(`http://localhost:3000/tasks/update-completion/${id}`);
+
+            if (response.status === 200) {
+                setTasks(prevTasks =>
+                    prevTasks.map(task =>
+                        task.id === id ? { ...task, completed: !currentStatus } : task
+                    )
+                );
+            } else {
+                alert(response.data.msg || "Failed to update task status.");
+            }
+        } catch (error) {
+            console.error("Error updating task status:", error?.response?.data || error.message);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -125,7 +136,7 @@ function PlanDay() {
                     <input
                         type="checkbox"
                         checked={task.completed} // TODO: call API to mark complete
-                        onChange={() => toggleTaskCompletion(task.id)}
+                        onChange={() => toggleTaskCompletion(task.id, task.completed)}
                         className="TaskCheckbox"
                     />
                     <span className="TaskName">

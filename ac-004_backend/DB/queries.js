@@ -114,4 +114,19 @@ dataPool.deleteTask = (id) => {
     })
 }
 
+dataPool.updateTaskCompletion = (id) => {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'UPDATE Calendar SET is_finished = NOT is_finished WHERE id = ?',
+            [id],
+            (err, res) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(res);
+            }
+        )
+    })
+}
+
 module.exports = dataPool

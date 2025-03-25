@@ -96,4 +96,19 @@ tasks.delete('/delete/:id', async (req, res) => {
     }
 })
 
+tasks.put('/update-completion/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const queryResult = await DB.updateTaskCompletion(id)
+
+        if (queryResult.length <= 0) {
+            return res.status(404).json({success: false, msg: "No task updated..."})
+        }
+        res.status(200).json({success: true, msg: "Task completion status updated!"})
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({success: false, msg: "Error while updating task."})
+    }
+})
+
 module.exports = tasks
