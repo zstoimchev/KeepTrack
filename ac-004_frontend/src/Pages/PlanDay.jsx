@@ -161,7 +161,7 @@ function PlanDay() {
                 </li>
             </ul>)}
         </div>
-        <button className="AddButton nnnm" onClick={openModal}>
+        <button className="AddButton" onClick={openModal}>
             + Add new task
         </button>
         <hr className="AddTaskSeparator"/>
