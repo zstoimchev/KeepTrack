@@ -47,10 +47,10 @@ dataPool.addUser = (name, surname, email, password) => {
     })
 }
 
-dataPool.addTask = (title, user_id, date, priority) => {
+dataPool.addTask = (title, user_id, date, priority, duration) => {
     return new Promise((resolve, reject) => {
-        connection.query(`INSERT INTO Calendar (title, user_id, date, priority)
-                          VALUES (?, ?, ?, ?)`, [title, user_id, date, priority], (err, res) => {
+        connection.query(`INSERT INTO Calendar (title, user_id, date, priority, duration)
+                          VALUES (?, ?, ?, ?, ?)`, [title, user_id, date, priority, duration], (err, res) => {
             if (err) {
                 return reject(err)
             }
@@ -111,6 +111,21 @@ dataPool.deleteTask = (id) => {
             }
             return resolve(res)
         })
+    })
+}
+
+dataPool.updateTaskCompletion = (id) => {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'UPDATE Calendar SET is_finished = NOT is_finished WHERE id = ?',
+            [id],
+            (err, res) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(res);
+            }
+        )
     })
 }
 

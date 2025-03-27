@@ -4,9 +4,9 @@ const DB = require('../DB/queries')
 
 tasks.post('/add', async (req, res) => {
     try {
-        const {title, user_id, date, priority} = req.body
+        const {title, user_id, date, priority, duration} = req.body
         try {
-            const queryResult = await DB.addTask(title, user_id, date, priority)
+            const queryResult = await DB.addTask(title, user_id, date, priority, duration)
             if (!(queryResult.affectedRows)) {
                 return res.status(503).json({success: false, msg: "Error adding new task..."})
             }
@@ -39,7 +39,7 @@ tasks.get('/get-user/', async (req, res) => {
     }
 })
 
-tasks.get('/get-date/', async (req, res) => {
+tasks.post('/get-date/', async (req, res) => {
     try {
         try {
             const {user_id, date} = req.body
@@ -77,10 +77,10 @@ tasks.get('/get-month/', async (req, res) => {
     }
 })
 
-tasks.delete('/delete', async (req, res) => {
+tasks.delete('/delete/:id', async (req, res) => {
     try {
         try {
-            const {id} = req.body
+            const {id} = req.params
             const queryResult = await DB.deleteTask(id)
             if (queryResult.length <= 0) {
                 return res.status(404).json({success: false, msg: "No task deleted..."})
@@ -93,6 +93,21 @@ tasks.delete('/delete', async (req, res) => {
     } catch (err) {
         console.error(err)
         return res.status(500).json({success: false, msg: "The server snapped..."})
+    }
+})
+
+tasks.put('/update-completion/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const queryResult = await DB.updateTaskCompletion(id)
+
+        if (queryResult.length <= 0) {
+            return res.status(404).json({success: false, msg: "No task updated..."})
+        }
+        res.status(200).json({success: true, msg: "Task completion status updated!"})
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({success: false, msg: "Error while updating task."})
     }
 })
 
