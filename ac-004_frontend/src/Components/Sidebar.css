@@ -5,6 +5,7 @@
     flex-direction: column; /* Stack child elements vertically */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     /*justify-content: flex-start; !* Space sections apart *!*/
+    /*padding: 1rem;*/
 }
 
 .user-section {
@@ -12,7 +13,7 @@
     font-weight: bold;
     color: #ffffff;
     margin-bottom: 10px;
-    border-bottom: 3px solid #ffffff;
+    /*border-bottom: 3px solid #ffffff;*/
 }
 
 .user-icon {
@@ -26,13 +27,12 @@
 .tasks-section {
     text-align: center; /* Center-align content */
     color: #ffffff; /* Darker text color */
-    margin-bottom: 20px;
 }
 
 .tasks-section p {
     font-weight: bold;
     color: #ffffff;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     border-bottom: 3px solid #ffffff; 
 }
 
@@ -88,10 +88,10 @@ input {
 
 }
 
-.date-section p {
-    margin: 5px 0;
-    font-size: 0.9rem;
-}
+/*.date-section p {*/
+/*    margin: 5px 0;*/
+/*    font-size: 0.9rem;*/
+/*}*/
 
 .button-section {
     margin-top: 0; /* Optional spacing adjustment */
@@ -138,4 +138,69 @@ input {
 
 .cancel-task:hover {
     color: red; /* Add color on hover for Cancel */
+}
+
+.input-container input {
+    display: block; /* Stack inputs vertically */
+    margin-bottom: 5px; /* Minimal space between inputs */
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc; /* Optional styling */
+    border-radius: 3px;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-name, .task-duration {
+    max-width: 13vw;
+}
+
+.task-checkbox {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.task-details {
+    transition: all 0.3s ease;
+}
+
+/* NEW classes only - doesn't touch .date-section */
+.date-day-xl {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: -1px;
+}
+
+.date-month-year-group {
+    /*display: flex;*/
+    gap: 12px;
+    margin-top: 0.5rem;
+}
+
+.date-month-bold {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.date-year-subtle {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #666;
+    margin: 0;
 }
