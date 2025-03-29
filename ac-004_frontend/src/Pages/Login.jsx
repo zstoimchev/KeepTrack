@@ -17,10 +17,12 @@ function Login({ onLogin }) {
             if (response.status === 200) {
                 const userID = response.data.user.id;
                 const userEmail = response.data.user.email;
+                const name = response.data.user.name;
 
                 console.log("Login successful:", response.data);
                 localStorage.setItem("email", userEmail);
                 localStorage.setItem("id", userID);
+                localStorage.setItem("name", name);
 
                 onLogin(userID, userEmail);
             } else {

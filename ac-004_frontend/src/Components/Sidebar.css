@@ -3,8 +3,8 @@
     height: 100%; /* Full height of the viewport */
     display: flex;
     flex-direction: column; /* Stack child elements vertically */
-    justify-content: space-between; /* Space sections apart */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    /*justify-content: flex-start; !* Space sections apart *!*/
 }
 
 .user-section {
@@ -21,6 +21,12 @@
     background-color: #ccc; /* Gray placeholder background */
     border-radius: 50%; /* Circular shape */
     margin: 0 auto 10px; /* Center icon and add space below */
+}
+
+.tasks-section {
+    text-align: center; /* Center-align content */
+    color: #ffffff; /* Darker text color */
+    margin-bottom: 20px;
 }
 
 .tasks-section p {
@@ -43,7 +49,8 @@
 }
 
 .task-container {
-    max-height: 150px;
+    /*max-height: 150px;*/
+    max-height: 40vh;
     overflow-y: auto;
     padding-right: 5px;
     background: none;
@@ -77,6 +84,8 @@ input {
     text-align: center; /* Center-align content */
     color: #ffffff; /* Darker text color */
     margin-bottom: 20px;
+    margin-top: auto;
+
 }
 
 .date-section p {
@@ -85,6 +94,7 @@ input {
 }
 
 .button-section {
+    margin-top: 0; /* Optional spacing adjustment */
     cursor: pointer;
     padding: 10px;
     text-align: center;
@@ -102,4 +112,30 @@ input {
 
 .button-section p:hover {
     background-color: #0056b3; /* Darker blue on hover */
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 5px; /* Add small spacing between Save and Cancel buttons */
+    align-items: center;
+    margin-top: 5px; /* Ensure a little space above the buttons if needed */
+}
+
+.save-task,
+.cancel-task {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px; /* Adjust size for better visibility */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.save-task:hover {
+    color: green; /* Add color on hover for Save */
+}
+
+.cancel-task:hover {
+    color: red; /* Add color on hover for Cancel */
 }
