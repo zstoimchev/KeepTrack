@@ -113,19 +113,14 @@ tasks.put('/update-completion/:id', async (req, res) => {
 
 tasks.get('/long-term/all/:id', async (req, res) => {
     try {
-        try {
-            const queryResult = await DB.getLongTermTasksByUserId(req.params.id)
-            if (queryResult.length <= 0) {
-                return res.status(404).json({success: false, msg: "No tasks fetched..."})
-            }
-            res.status(200).json({success: true, msg: "Tasks fetched successfully!", tasks: queryResult})
-        } catch (err) {
-            console.error(err)
-            return res.status(503).json({success: false, msg: "Error while fetching tasks"})
+        const queryResult = await DB.getLongTermTasksByUserId(req.params.id)
+        if (queryResult.length <= 0) {
+            return res.status(404).json({success: false, msg: "No tasks fetched..."})
         }
+        res.status(200).json({success: true, msg: "Tasks fetched successfully!", tasks: queryResult})
     } catch (err) {
         console.error(err)
-        return res.status(500).json({success: false, msg: "The server snapped..."})
+        return res.status(503).json({success: false, msg: "Error while fetching tasks"})
     }
 })
 
