@@ -1,13 +1,46 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./Navbar.css";
 import logo from './logo.png';
 import home from './home.png';
 import {Link} from "react-router-dom";
 
 const Navbar = () => {
+
+    const [quote, setQuote] = useState("");
+
+    // this is today quote but needs proxy server
+    // const fetchQuote = async () => {
+    //     try {
+    //         const response = await fetch('https://cors-anywhere.herokuapp.com/https://zenquotes.io/api/today');
+    //         const data = await response.json();
+    //         setQuote(data[0].q); // Display the quote
+    //     } catch (error) {
+    //         console.error('Error fetching quote:', error);
+    //         setQuote("Failure is success in progress!"); // Fallback quote
+    //     }
+    // };
+
+    // this is random quote
+    const fetchQuote = async () => {
+        try {
+            const response = await fetch('https://qapi.vercel.app/api/random');
+            const data = await response.json();
+
+            // Set the quote and author from API response
+            setQuote(data.quote);
+        } catch (error) {
+            console.error('Error fetching quote:', error);
+            setQuote("The best way to predict the future is to create it."); // Fallback quote
+        }
+    };
+
+    useEffect(() => {
+        fetchQuote();
+    }, []);
+
     return (<div className="header-container">
         <header className="quote-header">
-            <h1 className="quote-text">FAILURE IS SUCCESS IN PROGRESS!</h1>
+            <h1 className="quote-text">{quote}</h1>
             <img src={logo} alt="Logo" className="logo"/>
         </header>
 
