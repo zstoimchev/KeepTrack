@@ -101,15 +101,15 @@
 }
 
 .TaskItem.low .TaskName {
-    color: #17c700;
+    color: #006633;
 }
 
 .TaskItem.medium .TaskName {
-    color: #f8d01b;
+    color: #ff5500;
 }
 
 .TaskItem.high .TaskName {
-    color: #ff0000;
+    color: #d11111;
 }
 
 .TaskItem.completed .TaskName {
