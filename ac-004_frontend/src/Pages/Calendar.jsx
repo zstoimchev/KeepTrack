@@ -1,9 +1,75 @@
-function Calendar() {
-    return (<div style={{padding: '20px'}}>
-        {/*<iframe*/}
-        {/*    src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Europe%2FBelgrade&showPrint=0&src=Y3VwZXRyZWtpa29AZ21haWwuY29t&src=ZW4uc2xvdmVuaWFuI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&src=bnl0aW1lcy5jb21fODlhaTRpanBiNzMzZ3QyOHJnMjFkMmMyZWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%237986CB&color=%230B8043&color=%23E4C441"></iframe>*/}
+import React, { useState } from "react";
+import "./Calendar.css"; // Import the CSS file
 
-    </div>);
+function Calendar() {
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    const getMonthName = (date) => {
+        return date.toLocaleString("default", { month: "long" });
+    };
+
+    const getDaysInMonth = (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        return new Date(year, month + 1, 0).getDate();
+    };
+
+    const getFirstDayOfMonth = (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        return new Date(year, month, 1).getDay();
+    };
+
+    const handlePrevMonth = () => {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    };
+
+    const handleNextMonth = () => {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+    };
+
+    const daysInMonth = getDaysInMonth(currentDate);
+    const firstDayOfMonth = getFirstDayOfMonth(currentDate);
+
+    const calendarDays = Array(firstDayOfMonth)
+        .fill(null)
+        .concat(Array.from({ length: daysInMonth }, (_, i) => i + 1));
+
+    const handleClick = (day) => {
+        if (day) {
+            console.log(`Clicked on ${day} ${getMonthName(currentDate)} ${currentDate.getFullYear()}`);
+        }
+    };
+
+    return (
+        <div className="calendar-container">
+            <div className="calendar-header">
+                <button onClick={handlePrevMonth}>&lt;</button>
+                <h2>
+                    {getMonthName(currentDate)} {currentDate.getFullYear()}
+                </h2>
+                <button onClick={handleNextMonth}>&gt;</button>
+            </div>
+            <div className="calendar-grid">
+                {daysOfWeek.map((day) => (
+                    <div key={day} className="day-header">
+                        {day}
+                    </div>
+                ))}
+                {calendarDays.map((day, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handleClick(day)}
+                        disabled={!day}
+                    >
+                        {day || ""}
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
 }
 
 export default Calendar;
