@@ -9,11 +9,14 @@ function PlanDay() {
         title: '', priority: 'Low', duration: ''
     });
 
-    const fetchTasks = async () => {
+    const [currentDate, setCurrentDate] = useState({day: "", month: "", year: "", formatted: ""});
+
+    const fetchTasks = async (formatted) => {
         try {
             const user_id = localStorage.getItem("id");
-            const date = '2025-03-25'; // TODO: get the correct date (either today or from calendar...)
-            const response = await axios.post("http://localhost:3000/tasks/get-date", {user_id, date});
+            const response = await axios.post("http://localhost:3000/tasks/get-date", {
+                user_id, date: formatted
+            });
             if (response.status === 200) {
                 setTasks(response.data.tasks.map(task => ({
                     id: task.id || null,
@@ -31,8 +34,18 @@ function PlanDay() {
     };
 
     useEffect(() => {
-        fetchTasks();
-    }, []); // Empty dependency array ensures it runs once after initial render
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = date.toLocaleString("en-US", {month: "long"}).toUpperCase();
+        const month_num = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear().toString();
+        const formatted = `${year}-${month_num}-${day}`;
+
+        // Set the current date
+        setCurrentDate({ day, month, year, formatted });
+
+        fetchTasks(formatted);
+    }, []); // Runs only once on component mount
 
     const openModal = () => {
         setShowModal(true);
@@ -79,14 +92,17 @@ function PlanDay() {
         if (!newTask.title.trim() || !newTask.duration.trim()) return;
         try {
             const user_id = localStorage.getItem("id");
-            const date = '2025-03-25'; // TODO: correct date?...
             const response = await axios.post("http://localhost:3000/tasks/add", {
-                user_id, title: newTask.title, date, priority: newTask.priority, duration: newTask.duration,
+                user_id,
+                title: newTask.title,
+                date: currentDate.formatted,
+                priority: newTask.priority,
+                duration: newTask.duration,
             });
 
             if (response.status === 201) {
                 closeModal();
-                fetchTasks(); // Fetch the updated task list
+                fetchTasks(currentDate.formatted); // Fetch the updated task list
             } else {
                 alert(response.data.msg || "Failed to add task.");
             }
@@ -122,7 +138,7 @@ function PlanDay() {
     };
 
     return (<div className="PlanDayContainer">
-        <h1 className="DateHeader">02 July 2021</h1>
+        <h1 className="DateHeader">To-Do List for day: {currentDate.day} {currentDate.month}, {currentDate.year}</h1>
 
         <div className="TasksSection">
             <h2>Tasks for the day: Time Period</h2>
@@ -161,9 +177,9 @@ function PlanDay() {
                 </li>
             </ul>)}
         </div>
-        <button className="AddButton" onClick={openModal}>
-            + Add new task
-        </button>
+        {/*<button className="AddButton" onClick={openModal}>*/}
+        {/*    + Add new task*/}
+        {/*</button>*/}
         <hr className="AddTaskSeparator"/>
         <div className="ProgressSection">
             <h2>Progress Tracker for today</h2>
