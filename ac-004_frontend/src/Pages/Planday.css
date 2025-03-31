@@ -105,11 +105,17 @@
 }
 
 .TaskItem.medium .TaskName {
-    color: #ff5500;
+    /*color: #FFD700; !* softer gold-like yellow *!*/
+    /*color: #FFDD44; !* mellow pastel yellow *!*/
+    /*color: #ff5500; !* original idea *!*/
+    /*color: #E6B800; !* muted golden yellow with a touch of orange for warmth *!*/
+    /*color: #E69500; !* orangered? *!*/
+    color: #FFAA00; /* a bit more orange */
 }
 
 .TaskItem.high .TaskName {
-    color: #d11111;
+    /*color: #d11111;*/
+    color: #B22222;
 }
 
 .TaskItem.completed .TaskName {
