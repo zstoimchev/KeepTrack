@@ -42,7 +42,7 @@ function PlanDay() {
         const formatted = `${year}-${month_num}-${day}`;
 
         // Set the current date
-        setCurrentDate({ day, month, year, formatted });
+        setCurrentDate({day, month, year, formatted});
 
         fetchTasks(formatted);
     }, []); // Runs only once on component mount
@@ -144,11 +144,11 @@ function PlanDay() {
             <h2>Tasks for the day: Time Period</h2>
             {tasks.length === 0 ? (<div className="NoTasksMessage">
                 <p>No tasks for today. Add new tasks to kickstart your day!</p>
-                <li className="TaskItem add-new">
-                    <button className="AddButton" onClick={openModal}>
-                        + Add new:
-                    </button>
-                </li>
+                {/*<li className="TaskItem add-new">*/}
+                    {/*<button className="AddButton" onClick={openModal}>*/}
+                    {/*    + Add new:*/}
+                    {/*</button>*/}
+                {/*</li>*/}
             </div>) : (<ul className="TaskList">
                 {tasks.map((task) => (<li
                     key={task.id}
@@ -170,17 +170,20 @@ function PlanDay() {
                         Delete
                     </button>
                 </li>))}
-                <li className="TaskItem add-new">
-                    <button className="AddButton" onClick={openModal}>
-                        + Add new:
-                    </button>
-                </li>
+                {/*<li className="TaskItem add-new">*/}
+                {/*    <button className="AddButton" onClick={openModal}>*/}
+                {/*        + Add new:*/}
+                {/*    </button>*/}
+                {/*</li>*/}
             </ul>)}
         </div>
-        {/*<button className="AddButton" onClick={openModal}>*/}
-        {/*    + Add new task*/}
-        {/*</button>*/}
-        <hr className="AddTaskSeparator"/>
+        <div className="TaskItem add-ne divClassButtonFor">
+            <button className="AddButton no-decor" onClick={openModal}>
+                + Add new task
+            </button>
+        </div>
+
+        {/*<hr className="AddTaskSeparator"/>*/}
         <div className="ProgressSection">
             <h2>Progress Tracker for today</h2>
             <div className="ProgressBarContainer">

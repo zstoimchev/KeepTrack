@@ -57,10 +57,10 @@
 
 .TasksSection h2 {
     font-size: 20px;
-    /*margin-bottom: 20px;*/
+    margin-bottom: 0;
     color: #000000;
     border-bottom: 1px solid rgb(0, 0, 0);
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
     font-weight: 500;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .AddButton:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .ProgressSection {
@@ -433,4 +433,16 @@
 
 .nnnm {
     margin-left: 5%;
+}
+
+.divClassButtonFor {
+    margin-top: -10px;
+    border-bottom: 0;
+
+    /*margin-left: 5%;*/
+    padding-left: 5%;
+}
+
+.no-decor {
+    text-decoration: none;
 }
