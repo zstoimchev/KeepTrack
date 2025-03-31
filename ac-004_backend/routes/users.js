@@ -64,7 +64,7 @@ users.post('/login', async (req, res, next) => {
         }
         return res.status(200).json({
             success: true, user: {
-                id: queryResult[0].id, email: queryResult[0].email
+                id: queryResult[0].id, email: queryResult[0].email, name: queryResult[0].name,
             }, msg: "User is logged in!"
         })
     } catch (err) {

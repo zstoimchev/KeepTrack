@@ -4,7 +4,9 @@
   font-weight: 400;
 
   color: rgba(106, 141, 223, 0.87);
-  background-color: rgb(66, 110, 211);
+  /*background-color: rgb(66, 110, 211);*/
+  background-color: #0077B6;
+  /*background-color: #00B4D8;*/
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

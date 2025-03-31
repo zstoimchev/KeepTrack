@@ -57,10 +57,10 @@
 
 .TasksSection h2 {
     font-size: 20px;
-    /*margin-bottom: 20px;*/
+    margin-bottom: 0;
     color: #000000;
     border-bottom: 1px solid rgb(0, 0, 0);
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
     font-weight: 500;
 }
 
@@ -101,15 +101,21 @@
 }
 
 .TaskItem.low .TaskName {
-    color: #17c700;
+    color: #006633;
 }
 
 .TaskItem.medium .TaskName {
-    color: #f8d01b;
+    /*color: #FFD700; !* softer gold-like yellow *!*/
+    /*color: #FFDD44; !* mellow pastel yellow *!*/
+    /*color: #ff5500; !* original idea *!*/
+    /*color: #E6B800; !* muted golden yellow with a touch of orange for warmth *!*/
+    /*color: #E69500; !* orangered? *!*/
+    color: #FFAA00; /* a bit more orange */
 }
 
 .TaskItem.high .TaskName {
-    color: #ff0000;
+    /*color: #d11111;*/
+    color: #B22222;
 }
 
 .TaskItem.completed .TaskName {
@@ -130,7 +136,7 @@
 }
 
 .AddButton:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .ProgressSection {
@@ -427,4 +433,16 @@
 
 .nnnm {
     margin-left: 5%;
+}
+
+.divClassButtonFor {
+    margin-top: -10px;
+    border-bottom: 0;
+
+    /*margin-left: 5%;*/
+    padding-left: 5%;
+}
+
+.no-decor {
+    text-decoration: none;
 }
