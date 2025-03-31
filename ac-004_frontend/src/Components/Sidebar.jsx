@@ -25,9 +25,14 @@ const Sidebar = ({onLogout}) => {
         const userId = localStorage.getItem("id");
         try {
             const response = await axios.get(`http://localhost:3000/tasks/long-term/all/${userId}`);
-            setTasks(response.data.tasks); // Assuming the API response is an array of tasks
+
+            if (response.data.tasks && response.data.tasks.length > 0) {
+                setTasks(response.data.tasks); // Assign tasks if they exist
+            } else {
+                setTasks([]); // Set tasks to an empty array if no tasks are present
+            }
         } catch (error) {
-            console.error("Error fetching tasks:", error);
+            console.error(error)
         }
     };
 
