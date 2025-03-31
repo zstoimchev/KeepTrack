@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Calendar.css"; // Import the CSS file
 
-function Calendar() {
+function Calendar({ onDateSelect }) {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -37,9 +37,17 @@ function Calendar() {
         .fill(null)
         .concat(Array.from({ length: daysInMonth }, (_, i) => i + 1));
 
+    // const handleClick = (day) => {
+    //     if (day) {
+    //         console.log(`Clicked on ${day} ${getMonthName(currentDate)} ${currentDate.getFullYear()}`);
+    //     }
+    // };
+
     const handleClick = (day) => {
         if (day) {
-            console.log(`Clicked on ${day} ${getMonthName(currentDate)} ${currentDate.getFullYear()}`);
+            const month = getMonthName(currentDate);
+            const year = currentDate.getFullYear();
+            onDateSelect(day, month, year);
         }
     };
 
