@@ -129,4 +129,30 @@ dataPool.updateTaskCompletion = (id) => {
     })
 }
 
+dataPool.getLongTermTasksByUserId = (user_id) => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM Calendar WHERE user_id = ? AND date = ?', [user_id, "long-term"], (err, res) => {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(res)
+        })
+    })
+}
+
+dataPool.updateLongTermTask = (id, title, duration) => {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'UPDATE Calendar SET duration = ?, title = ? WHERE id = ?',
+            [duration, title, id],
+            (err, res) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(res);
+            }
+        )
+    })
+}
+
 module.exports = dataPool
