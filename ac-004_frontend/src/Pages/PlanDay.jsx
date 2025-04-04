@@ -6,10 +6,15 @@ function PlanDay() {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
-        title: '', priority: 'Low', duration: ''
+        title: '', 
+        priority: null, 
+        duration: ''
     });
 
-    const [currentDate, setCurrentDate] = useState({ day: "", month: "", year: "", formatted: "" });
+    const [currentDate, setCurrentDate] = useState({ day: "", 
+                                                     month: "", 
+                                                     year: "", 
+                                                     formatted: "" });
 
     const fetchTasks = async (formatted) => {
         try {
@@ -52,7 +57,9 @@ function PlanDay() {
     const closeModal = () => {
         setShowModal(false);
         setNewTask({
-            title: '', priority: 'Low', duration: ''
+            title: '', 
+            priority: null, 
+            duration: ''
         });
     };
 
@@ -181,7 +188,7 @@ function PlanDay() {
                 <h2>Progress Tracker for today</h2>
                 <div className="ProgressBarContainer">
                     <div className="MultiColorProgress">
-                        {['High', 'Medium', 'Low'].map(priority => {
+                        {['Low', 'Medium', 'High'].map(priority => {
                             const width = calculatePriorityProgress(priority);
                             return (
                                 <div
@@ -189,8 +196,8 @@ function PlanDay() {
                                     className={`ProgressSegment ${priority.toLowerCase()}`}
                                     style={{
                                         width: `${width}%`,
-                                        backgroundColor: priority === 'High' ? '#e74c3c' :
-                                            priority === 'Medium' ? '#f39c12' : '#27ae60'
+                                        backgroundColor: priority === 'High' ? '#B22222' :
+                                            priority === 'Medium' ? '#E67600' : '#006633'
                                     }}
                                 />
                             );
@@ -200,9 +207,9 @@ function PlanDay() {
                 <div className="ProgressText">
                     {Math.round(calculateProgress())}% completed
                     <div className="PriorityLegend">
-                        <span className="LegendItem high">High</span>
-                        <span className="LegendItem medium">Medium</span>
                         <span className="LegendItem low">Low</span>
+                        <span className="LegendItem medium">Medium</span>
+                        <span className="LegendItem high">High</span>
                     </div>
                 </div>
             </div>
@@ -232,16 +239,30 @@ function PlanDay() {
                             <div className="FormGroup">
                                 <label>Priority</label>
                                 <div className="PriorityOptions">
-                                    {['Low', 'Medium', 'High'].map(level => (
-                                        <button
-                                            key={level}
-                                            type="button"
-                                            className={`PriorityButton ${newTask.priority === level ? 'active' : ''}`}
-                                            onClick={() => handlePriorityChange(level)}
-                                        >
-                                            {level}
-                                        </button>
-                                    ))}
+                                    <button
+                                        type="button"
+                                        className={`PriorityButton ${newTask.priority === 'Low' ? 'active' : ''}`}
+                                        onClick={() => handlePriorityChange('Low')}
+                                        data-priority="low"
+                                    >
+                                        Low
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`PriorityButton ${newTask.priority === 'Medium' ? 'active' : ''}`}
+                                        onClick={() => handlePriorityChange('Medium')}
+                                        data-priority="medium"
+                                    >
+                                        Medium
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`PriorityButton ${newTask.priority === 'High' ? 'active' : ''}`}
+                                        onClick={() => handlePriorityChange('High')}
+                                        data-priority="high"
+                                    >
+                                        High
+                                    </button>
                                 </div>
                             </div>
 
