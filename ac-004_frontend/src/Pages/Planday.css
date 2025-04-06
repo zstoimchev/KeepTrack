@@ -105,16 +105,10 @@
 }
 
 .TaskItem.medium .TaskName {
-    /*color: #FFD700; !* softer gold-like yellow *!*/
-    /*color: #FFDD44; !* mellow pastel yellow *!*/
-    /*color: #ff5500; !* original idea *!*/
-    /*color: #E6B800; !* muted golden yellow with a touch of orange for warmth *!*/
-    /*color: #E69500; !* orangered? *!*/
-    color: #FFAA00; /* a bit more orange */
+    color: #E67600; 
 }
 
 .TaskItem.high .TaskName {
-    /*color: #d11111;*/
     color: #B22222;
 }
 
@@ -176,15 +170,15 @@
 }
 
 .ProgressSegment.low {
-    background-color: #17c700;
+    background-color: #006633;
 }
 
 .ProgressSegment.medium {
-    background-color: #f8d01b;
+    background-color: #E67600;
 }
 
 .ProgressSegment.high {
-    background-color: #ff0000;
+    background-color: #B22222;
 }
 
 .ProgressText {
@@ -216,15 +210,15 @@
 }
 
 .LegendItem.high:before {
-    background-color: #17c700;
+    background-color: #B22222;
 }
 
 .LegendItem.medium:before {
-    background-color: #f8d01b;
+    background-color: #E67600;
 }
 
 .LegendItem.low:before {
-    background-color: #ff0000;
+    background-color: #006633;
 }
 
 .Modal {
@@ -243,10 +237,11 @@
 .ModalContent {
     background-color: #FFFFFF;
     width: 90%;
-    max-width: 450px;
+    max-width: 500px; /* Increased from 450px */
     border-radius: 10px;
     box-shadow: 0 5px 25px rgba(0,0,0,0.2);
     animation: modalFadeIn 0.3s ease-out;
+    padding: 20px 30px; /* Added padding */
 }
 
 @keyframes modalFadeIn {
@@ -258,13 +253,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 0 0 20px 0; /* Adjusted padding */
     border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 20px; /* Added margin */
 }
 
 .ModalHeader h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 22px; /* Increased from 18px */
     color: #000000;
     font-weight: 600;
 }
@@ -285,24 +281,26 @@
 }
 
 .FormGroup {
-    padding: 15px 20px;
+    padding: 15px 0; /* Changed from 15px 20px */
+    text-align: left; /* Changed from centered */
 }
 
 .FormGroup label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px; /* Increased from 8px */
     font-weight: 600;
     color: #000000;
-    font-size: 14px;
+    font-size: 16px; /* Increased from 14px */
 }
 
 .FormGroup input {
-    width: 100%;
-    padding: 12px 15px;
+    width: 90%; /* Changed from 87% */
+    padding: 14px 16px; /* Increased from 12px 15px */
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 16px; /* Increased from 14px */
     transition: border-color 0.2s;
+    margin-bottom: 20px; /* Added margin */
 }
 
 .FormGroup input:focus {
@@ -314,7 +312,7 @@
 .PriorityOptions {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin: 10px 0 20px 0; /* Added bottom margin */
 }
 
 .PriorityButton {
@@ -328,32 +326,56 @@
     font-weight: 500;
 }
 
-.PriorityButton:hover {
-    background-color: rgba(248, 175, 86, 0.2);
+/* Original colors when not clicked */
+.PriorityButton[data-priority="low"] {
+    background-color: #006633 !important; /* Dark green */
+    color: white;
+    border: none;
 }
 
-.PriorityButton.active {
-    background-color: #FF8C00;
+.PriorityButton[data-priority="medium"] {
+    background-color: #E67600 !important; /* Orange */
     color: white;
-    border-color: #FF8C00;
+    border: none;
+}
+
+.PriorityButton[data-priority="high"] {
+    background-color: #B22222 !important; /* Red */
+    color: white;
+    border: none;
+}
+
+/* Lighter colors ONLY when clicked/active */
+.PriorityButton[data-priority="low"].active {
+    background-color: #02d16a !important; /* Light green */
+}
+
+.PriorityButton[data-priority="medium"].active {
+    background-color: #FFAA00 !important; /* Light orange */
+}
+
+.PriorityButton[data-priority="high"].active {
+    background-color: #ff3838 !important; /* Light red */
 }
 
 .ModalActions {
     display: flex;
-    justify-content: flex-end;
-    padding: 15px 20px;
+    justify-content: center; /* Keep centered */
+    padding: 20px 0 0 0; /* Adjusted padding */
     border-top: 1px solid rgba(0,0,0,0.1);
-    gap: 10px;
+    gap: 15px; /* Increased from 10px */
+    margin-top: 20px; /* Added margin */
 }
 
 .CancelButton {
-    padding: 10px 20px;
+    padding: 12px 25px;
     background-color: #FFFFFF;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
     font-weight: 500;
+    font-size: 16px;
 }
 
 .CancelButton:hover {
@@ -361,18 +383,19 @@
 }
 
 .SubmitButton {
-    padding: 10px 20px;
-    background-color: #FF8C00;
+    padding: 12px 25px;
+    background-color: #0077B6;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s;
+    font-size: 16px;
 }
 
 .SubmitButton:hover {
-    background-color: #C76E00;
+    background-color: #0077B6;
 }
 
 .TaskItem {
@@ -403,8 +426,6 @@
 .DeleteButton:hover {
     background-color: #c0392b; /* Darker shade on hover */
 }
-
-
 
 .AddTaskSeparator {
     width: 100%;
