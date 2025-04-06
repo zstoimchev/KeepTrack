@@ -13,16 +13,40 @@ const Startday = () => {
 
   const [tasks, setTasks] = useState([]);
   const [firstTask, setFirstTask] = useState(null);
+  const [taskDuration, setTaskDuration] = useState(null);
 
   const fetchOneTask = async() => {
     const user_id = localStorage.getItem("id");
     const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
       user_id }
     );
-    setFirstTask(response.data.tasks[0] || null);
+    setFirstTask(response.data.tasks[6] || null);
   };
 
   useEffect(() => { fetchOneTask(); }, []);
+  
+  useEffect(() => {
+    const fetchTaskDuration = async () => {
+      try {
+        const user_id = localStorage.getItem("id");
+        const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
+          user_id }
+        );
+        const taskMinutes = response.data.tasks[6]?.duration || 25;
+        setTimeLeft(taskMinutes * 60);
+      } catch (err) {
+        console.log("Using default timer (25min)");
+      }
+    };
+    fetchTaskDuration();
+  }, []);
+
+  useEffect(() => {
+    if (taskDuration) {
+      setTimeLeft(taskDuration);
+      setActiveTab('Task Duration');
+    }
+  }, [taskDuration]);
 
   /* const fetchShortTermTasks = async () => {
     try {
@@ -47,7 +71,7 @@ const Startday = () => {
   }, [tasks]);
 
   const timerPresets = {
-    'Focus Time': 1500,
+    'Focus Time': taskDuration || 1500,
     'Short Break': 300,
     'Long Break': 900
   };
@@ -77,7 +101,7 @@ const Startday = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setTimeLeft(timerPresets[tab]);
+    setTimeLeft(timerPresets[tab]); // Automatically uses taskDuration if tab is 'Task Duration'
     setIsRunning(false);
     setIsEditing(false);
   };
@@ -93,18 +117,19 @@ const Startday = () => {
 
   return (
     <div className="dynamic-container">
-     
-      <div className="startday-tasks">
-        {firstTask ? (
-          <div className="task">
+
+      <div className="startday-current-task">
+        <h2 className="task-text"> Current task </h2>
+
+        <div className="startday-tasks">
+          {firstTask ? (
             <h3>{firstTask.title}</h3>
-            {/* Add other fields like duration/priority if needed */}
-          </div>
-        ) : (
-          <p>No tasks available</p>
-        )}
+          ) : (
+            <p>No tasks available</p>
+          )}
+        </div>
       </div>
-      
+
     <div className="startday-container">
       <div className="startday-tabs">
         {Object.keys(timerPresets).map((tab) => (

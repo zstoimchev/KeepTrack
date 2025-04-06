@@ -11,6 +11,11 @@ function PlanDay() {
 
     const [currentDate, setCurrentDate] = useState({day: "", month: "", year: "", formatted: ""});
 
+    const [timeInput, setTimeInput] = useState({
+        hours: '',
+        minutes: '' ,
+    });
+
     const fetchTasks = async (formatted) => {
         try {
             const user_id = localStorage.getItem("id");
@@ -18,13 +23,20 @@ function PlanDay() {
                 user_id, date: formatted
             });
             if (response.status === 200) {
-                setTasks(response.data.tasks.map(task => ({
-                    id: task.id || null,
-                    title: task.title || 'Untitled Task',
-                    priority: task.priority || 'Low',
-                    duration: task.duration || '0',
-                    completed: task.is_finished || false
-                })));
+                setTasks(response.data.tasks.map(task => {
+
+                    const hours = Math.floor(task.duration / 60);
+                    const minutes = task.duration % 60;
+                    
+                    return {
+                        id: task.id || null,
+                        title: task.title || 'Untitled Task',
+                        priority: task.priority || 'Low',
+                        duration: task.duration || 0,
+                        displayDuration: `${hours}h ${minutes}m`,
+                        completed: task.is_finished || false
+                      };
+                }));
             } else {
                 alert(response.data.msg);
             }
@@ -56,6 +68,7 @@ function PlanDay() {
         setNewTask({
             title: '', priority: 'Low', duration: ''
         });
+        setTimeInput({hours:'', minutes: ''});
     };
 
     const handleInputChange = (e) => {
@@ -68,6 +81,19 @@ function PlanDay() {
     const handlePriorityChange = (priority) => {
         setNewTask(prev => ({
             ...prev, priority
+        }));
+    };
+
+    const handleTimeChange = (e, field) => {
+        let value = e.target.value;
+        
+        if (value.length > 2) return;
+        if (field === 'hours' && parseInt(value) > 23) value = '23';
+        if (field === 'minutes' && parseInt(value) > 59) value = '59';
+        
+        setTimeInput(prev => ({
+          ...prev,
+          [field]: value
         }));
     };
 
@@ -89,7 +115,15 @@ function PlanDay() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newTask.title.trim() || !newTask.duration.trim()) return;
+
+        const totalMinutes = (parseInt(timeInput.hours) || 0) * 60 +
+            (parseInt(timeInput.minutes) || 0);
+
+        if (!newTask.title.trim() || totalMinutes <= 0) {
+            alert("Please enter a title and valid duration");
+            return;
+        } 
+
         try {
             const user_id = localStorage.getItem("id");
             const response = await axios.post("http://localhost:3000/tasks/add", {
@@ -97,7 +131,7 @@ function PlanDay() {
                 title: newTask.title,
                 date: currentDate.formatted,
                 priority: newTask.priority,
-                duration: newTask.duration,
+                duration: totalMinutes,
             });
 
             if (response.status === 201) {
@@ -137,7 +171,8 @@ function PlanDay() {
         }
     };
 
-    return (<div className="PlanDayContainer">
+    return (
+    <div className="PlanDayContainer">
         <h1 className="DateHeader">To-Do List for day: {currentDate.day} {currentDate.month}, {currentDate.year}</h1>
 
         <div className="TasksSection">
@@ -161,7 +196,7 @@ function PlanDay() {
                         className="TaskCheckbox"
                     />
                     <span className="TaskName">
-                        {task.title}: {task.priority}, {task.duration} minutes
+                        {task.title}: {task.priority}, {task.displayDuration} minutes
                     </span>
                     <button
                         className="DeleteButton"
@@ -208,7 +243,7 @@ function PlanDay() {
             </div>
         </div>
 
-        {showModal && (<div className="Modal">
+            {showModal && (<div className="Modal">
             <div className="ModalContent">
                 <div className="ModalHeader">
                     <h3>Add New Task</h3>
@@ -245,15 +280,29 @@ function PlanDay() {
 
                     <div className="FormGroup">
                         <label htmlFor="duration">Duration</label>
-                        <input
-                            id="duration"
-                            type="text"
-                            name="duration"
-                            value={newTask.duration}
-                            onChange={handleInputChange}
-                            placeholder="e.g. 30 min, 1 hour"
-                            required
-                        />
+                            <div className="duration-input">
+                                <input
+                                    type="number"
+                                    value={timeInput.hours}
+                                    onChange={(e) => handleTimeChange(e, 'hours')}
+                                    placeholder="00"
+                                    min="0"
+                                    max="23"
+                                    maxLength={2}
+                                />
+                                <span>Hours</span>
+
+                                <input
+                                    type="number"
+                                    value={timeInput.minutes}
+                                    onChange={(e) => handleTimeChange(e, 'minutes')}
+                                    placeholder="00"
+                                    min="0"
+                                    max="59"
+                                    maxLength={2}
+                                />
+                            <span>Minutes</span>
+                        </div>
                     </div>
 
                     <div className="ModalActions">
