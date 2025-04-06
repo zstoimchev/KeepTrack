@@ -1,6 +1,7 @@
 // Startday.jsx
 import React, { useState, useEffect } from 'react';
 import './Startday.css';
+import axios from "axios";
 
 const Startday = () => {
   const [activeTab, setActiveTab] = useState('Focus Time');
@@ -9,6 +10,41 @@ const Startday = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
+
+  const [tasks, setTasks] = useState([]);
+  const [firstTask, setFirstTask] = useState(null);
+
+  const fetchOneTask = async() => {
+    const user_id = localStorage.getItem("id");
+    const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
+      user_id }
+    );
+    setFirstTask(response.data.tasks[0] || null);
+  };
+
+  useEffect(() => { fetchOneTask(); }, []);
+
+  /* const fetchShortTermTasks = async () => {
+    try {
+      const user_id = localStorage.getItem("id");
+      const response = await axios.post("http://localhost:3000/tasks/get-shortterm", { 
+        user_id 
+      });
+      setTasks(response.data.tasks);
+    } catch (err) {
+      console.log("No short-term tasks found");
+    }
+  };
+  
+  useEffect(() => {
+    fetchShortTermTasks();
+  }, []); */
+
+  useEffect(() => {
+    if (tasks.some(task => task.date === "longterm")) {
+      console.error("Long-term task leaked!"); // vo slucaj da ebi db nes
+    }
+  }, [tasks]);
 
   const timerPresets = {
     'Focus Time': 1500,
@@ -58,16 +94,16 @@ const Startday = () => {
   return (
     <div className="dynamic-container">
      
-      <div className="startday-current-task">
-
-        <div className="task-text"> 
-          Current Task
-        </div>
-
-        <div className="startday-tasks"> 
-           Task From Plan Your Day Here 
-        </div>
-    </div>
+      <div className="startday-tasks">
+        {firstTask ? (
+          <div className="task">
+            <h3>{firstTask.title}</h3>
+            {/* Add other fields like duration/priority if needed */}
+          </div>
+        ) : (
+          <p>No tasks available</p>
+        )}
+      </div>
       
     <div className="startday-container">
       <div className="startday-tabs">
