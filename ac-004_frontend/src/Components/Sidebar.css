@@ -205,3 +205,151 @@ input {
     color: #666;
     margin: 0;
 }
+
+.Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ModalContent {
+    background-color: #FFFFFF;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.ModalHeader h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.CloseButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000000;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 0 5px;
+}
+
+.CloseButton:hover {
+    color: #FF8C00;
+}
+
+.FormGroup {
+    padding: 15px 20px;
+}
+
+.FormGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #000000;
+    font-size: 14px;
+}
+
+.FormGroup input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.FormGroup input:focus {
+    outline: none;
+    border-color: #FF8C00;
+    box-shadow: 0 0 0 2px rgba(255,140,0,0.2);
+}
+
+.PriorityOptions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.PriorityButton {
+    flex: 1;
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.PriorityButton:hover {
+    background-color: rgba(248, 175, 86, 0.2);
+}
+
+.PriorityButton.active {
+    background-color: #FF8C00;
+    color: white;
+    border-color: #FF8C00;
+}
+
+.ModalActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    gap: 10px;
+}
+
+.CancelButton {
+    padding: 10px 20px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.CancelButton:hover {
+    background-color: rgba(248, 175, 86, 0.2);
+}
+
+.CloseButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000000;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 0 5px;
+}
+
+.CloseButton:hover {
+    color: #FF8C00;
+}

@@ -56,6 +56,19 @@ const Startday = () => {
   };
 
   return (
+    <div className="dynamic-container">
+     
+      <div className="startday-current-task">
+
+        <div className="task-text"> 
+          Current Task
+        </div>
+
+        <div className="startday-tasks"> 
+           Task From Plan Your Day Here 
+        </div>
+    </div>
+      
     <div className="startday-container">
       <div className="startday-tabs">
         {Object.keys(timerPresets).map((tab) => (
@@ -145,6 +158,20 @@ const Startday = () => {
           </div>
         )}
       </div>
+    </div>
+
+      <div className="startday-current-task">
+
+        <div className="task-text">
+          Next Task
+        </div>
+
+        <div className="startday-tasks">
+          Task From Plan Your Day Here
+        </div>
+
+      </div>
+
     </div>
   );
 };

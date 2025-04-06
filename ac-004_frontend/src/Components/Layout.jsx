@@ -14,9 +14,7 @@ function Layout({children, onLogout}) {
                 <Navbar/>
             </div>
             <div className="Dynamic">
-                <div className="Calendar">
                     {children}
-                </div>
             </div>
         </div>
     </div>);
