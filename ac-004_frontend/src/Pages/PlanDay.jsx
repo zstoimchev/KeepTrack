@@ -46,8 +46,7 @@ function PlanDay({ selectedDate }) {
         const month = date.toLocaleString("en-US", { month: "long" }).toUpperCase();
         const month_num = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear().toString();
-        const formatted = selectedDate || `${year}-${monthNum}-${day}`;
-
+        const formatted = selectedDate || `${year}-${month_num}-${day}`;
         setCurrentDate({ day, month, year, formatted });
         fetchTasks(formatted);
     }, []);
