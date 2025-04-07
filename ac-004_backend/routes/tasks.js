@@ -1,6 +1,7 @@
-const express = require("express")
+import express from 'express'
+import DB from '../DB/queries.js'
+
 const tasks = express.Router()
-const DB = require('../DB/queries')
 
 tasks.post('/add', async (req, res) => {
     try {
@@ -169,4 +170,4 @@ tasks.put('/long-term/update/:id', async (req, res) => {
     }
 })
 
-module.exports = tasks
+export default tasks
