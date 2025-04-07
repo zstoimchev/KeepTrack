@@ -6,12 +6,16 @@ function PlanDay({ selectedDate }) {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
-        title: '',
-        priority: null,
+        title: '', 
+        priority: null, 
         duration: ''
     });
 
-    const [currentDate, setCurrentDate] = useState({day: "", month: "", year: "", formatted: selectedDate || "",});
+
+    const [currentDate, setCurrentDate] = useState({ day: "", 
+                                                     month: "", 
+                                                     year: "", 
+                                                     formatted: "" });
 
     const fetchTasks = async (formatted) => {
         try {
@@ -40,13 +44,13 @@ function PlanDay({ selectedDate }) {
         const date = selectedDate ? new Date(selectedDate) : new Date();
         const day = String(date.getDate()).padStart(2, "0");
         const month = date.toLocaleString("en-US", { month: "long" }).toUpperCase();
-        const monthNum = String(date.getMonth() + 1).padStart(2, "0");
+        const month_num = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear().toString();
         const formatted = selectedDate || `${year}-${monthNum}-${day}`;
 
         setCurrentDate({ day, month, year, formatted });
-        fetchTasks(formatted); // Fetch tasks for the determined date
-    }, [selectedDate]);
+        fetchTasks(formatted);
+    }, []);
 
     const openModal = () => {
         setShowModal(true);
@@ -55,8 +59,8 @@ function PlanDay({ selectedDate }) {
     const closeModal = () => {
         setShowModal(false);
         setNewTask({
-            title: '',
-            priority: null,
+            title: '', 
+            priority: null, 
             duration: ''
         });
     };
