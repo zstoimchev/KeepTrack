@@ -1,6 +1,6 @@
-const connection = require('./dbConfig');
+import connection from './dbConfig.js'
 
-let dataPool = {}
+const dataPool = {}
 
 dataPool.allUsers = () => {
     return new Promise((resolve, reject) => {
@@ -155,4 +155,4 @@ dataPool.updateLongTermTask = (id, title, duration) => {
     })
 }
 
-module.exports = dataPool
+export default dataPool
