@@ -6,14 +6,14 @@ function PlanDay() {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
-        title: '', 
-        priority: null, 
+        title: '',
+        priority: null,
         duration: ''
     });
 
-    const [currentDate, setCurrentDate] = useState({ day: "", 
-                                                     month: "", 
-                                                     year: "", 
+    const [currentDate, setCurrentDate] = useState({ day: "",
+                                                     month: "",
+                                                     year: "",
                                                      formatted: "" });
 
     const [timeInput, setTimeInput] = useState({
@@ -32,7 +32,7 @@ function PlanDay() {
 
                     const hours = Math.floor(task.duration / 60);
                     const minutes = task.duration % 60;
-                    
+
                     return {
                         id: task.id || null,
                         title: task.title || 'Untitled Task',
@@ -69,8 +69,8 @@ function PlanDay() {
     const closeModal = () => {
         setShowModal(false);
         setNewTask({
-            title: '', 
-            priority: null, 
+            title: '',
+            priority: null,
             duration: ''
         });
         setTimeInput({hours:'', minutes: ''});
@@ -91,11 +91,11 @@ function PlanDay() {
 
     const handleTimeChange = (e, field) => {
         let value = e.target.value;
-        
+
         if (value.length > 2) return;
         if (field === 'hours' && parseInt(value) > 23) value = '23';
         if (field === 'minutes' && parseInt(value) > 59) value = '59';
-        
+
         setTimeInput(prev => ({
           ...prev,
           [field]: value
@@ -127,7 +127,7 @@ function PlanDay() {
         if (!newTask.title.trim() || totalMinutes <= 0) {
             alert("Please enter a title and valid duration");
             return;
-        } 
+        }
 
         try {
             const user_id = localStorage.getItem("id");
@@ -175,8 +175,9 @@ function PlanDay() {
         }
     };
 
-    return (<div className="PlanDayContainer">
-        <h1 className="DateHeader">To-Do List for day: {currentDate.day} {currentDate.month}, {currentDate.year}</h1>
+    return (
+        <div className="PlanDayContainer">
+            <h1 className="DateHeader">To-Do List for day: {currentDate.day} {currentDate.month}, {currentDate.year}</h1>
 
             <div className="TasksSection">
                 <h2>Tasks for the day: Time Period</h2>
@@ -299,18 +300,32 @@ function PlanDay() {
                                 </div>
                             </div>
 
-                            <div className="FormGroup">
-                                <label htmlFor="duration">Duration</label>
+                    <div className="FormGroup">
+                        <label htmlFor="duration">Duration</label>
+                            <div className="duration-input">
                                 <input
-                                    id="duration"
-                                    type="text"
-                                    name="duration"
-                                    value={newTask.duration}
-                                    onChange={handleInputChange}
-                                    placeholder="e.g. 30 min, 1 hour"
-                                    required
+                                    type="number"
+                                    value={timeInput.hours}
+                                    onChange={(e) => handleTimeChange(e, 'hours')}
+                                    placeholder="00"
+                                    min="0"
+                                    max="23"
+                                    maxLength={2}
                                 />
-                            </div>
+                                <span>Hours</span>
+
+                                <input
+                                    type="number"
+                                    value={timeInput.minutes}
+                                    onChange={(e) => handleTimeChange(e, 'minutes')}
+                                    placeholder="00"
+                                    min="0"
+                                    max="59"
+                                    maxLength={2}
+                                />
+                            <span>Minutes</span>
+                        </div>
+                    </div>
 
                             <div className="ModalActions">
                                 <button type="button" className="CancelButton" onClick={closeModal}>
