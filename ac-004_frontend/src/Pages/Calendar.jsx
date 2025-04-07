@@ -51,12 +51,17 @@ function Calendar({ onDateSelect }) {
         }
     };
 
+    const handleCurrentMonth = () => {
+        setCurrentDate(new Date()); // Resets to the current date
+    };
+
     return (
         <div className="calendar-container">
             <div className="calendar-header">
                 <button onClick={handlePrevMonth}>&lt;</button>
-                <h2>
-                    {getMonthName(currentDate)} {currentDate.getFullYear()}
+                <h2 onClick={handleCurrentMonth}>
+                    {getMonthName(currentDate)}
+                    {currentDate.getFullYear()}
                 </h2>
                 <button onClick={handleNextMonth}>&gt;</button>
             </div>

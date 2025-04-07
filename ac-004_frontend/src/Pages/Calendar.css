@@ -13,10 +13,15 @@
 
 .calendar-header button {
     cursor: pointer;
+    color: white; /* Changes the previous and next month buttons text to white */
+    background: none; /* Optional: Removes background color to make it look cleaner */
+    border: none; /* Optional: Removes border for a cleaner look */
 }
 
 .calendar-header h2 {
     text-align: center;
+    color: white;
+    cursor: pointer;
 }
 
 .calendar-grid {
@@ -28,6 +33,7 @@
 .calendar-grid .day-header {
     font-weight: bold;
     text-align: center;
+    color: white;
 }
 
 .calendar-grid button {
