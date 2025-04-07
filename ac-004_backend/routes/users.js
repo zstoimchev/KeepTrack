@@ -1,6 +1,7 @@
-const express = require("express")
+import express from 'express'
+import DB from '../DB/queries.js'
+
 const users = express.Router()
-const DB = require('../DB/queries')
 
 users.get('/all', async (req, res) => {
     try {
@@ -49,6 +50,7 @@ users.post('/register', async (req, res) => {
 })
 
 users.post('/login', async (req, res, next) => {
+    console.log("---")
     try {
         const {email, password} = req.body
         if (!email || !password) {
@@ -73,4 +75,4 @@ users.post('/login', async (req, res, next) => {
     }
 })
 
-module.exports = users
+export default users
