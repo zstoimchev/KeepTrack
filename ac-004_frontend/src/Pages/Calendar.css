@@ -1,0 +1,53 @@
+.calendar-container {
+    /*padding: 20px;*/
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*margin-bottom: 20px;*/
+}
+
+.calendar-header button {
+    cursor: pointer;
+    color: white; /* Changes the previous and next month buttons text to white */
+    background: none; /* Optional: Removes background color to make it look cleaner */
+    border: none; /* Optional: Removes border for a cleaner look */
+}
+
+.calendar-header h2 {
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 20px;
+}
+
+.calendar-grid .day-header {
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.calendar-grid button {
+    padding: 20px; /* Larger padding for a bigger button size */
+    font-size: 1.5em; /* Increased font size for larger dates */
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    width: 100%;
+    cursor: pointer;
+}
+
+.calendar-grid button:disabled {
+    background-color: transparent;
+    cursor: default;
+}
