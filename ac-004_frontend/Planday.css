@@ -1,0 +1,469 @@
+.PlanDayContainer {
+    font-family: 'Arial', sans-serif;
+    width: 70vw;
+    /*max-height: 50vh;*/
+    /*max-width: 100%;*/
+    /*margin: 0px 800px 0px 0px;*/
+    padding: 2px;
+    color: #000000;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.DateHeader {
+    font-size: 28px;
+    /*margin-bottom: 25px;*/
+    color: #000000;
+    text-align: center;
+    font-weight: 600;
+}
+
+.TasksSection {
+    background-color: rgba(255, 255, 255, 0);;
+    border-radius: 8px;
+    /*padding: 25px 0 25px 0;*/
+    padding: 0 25px 0 25px;
+    /*padding: 25px;*/
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-height: 35vh;
+    overflow-y: auto;
+}
+
+.TasksSection::-webkit-scrollbar {
+    width: 8px;
+}
+
+.TasksSection::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.TasksSection::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.TasksSection::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.TasksSection {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.TasksSection h2 {
+    font-size: 20px;
+    margin-bottom: 0;
+    color: #000000;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    /*padding-bottom: 10px;*/
+    font-weight: 500;
+}
+
+.TaskList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.TaskItem {
+    display: flex;
+    align-items: center;
+    /*padding: 15px;*/
+    border-bottom: 1px solid rgba(0,0,0,1);
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.TaskItem:hover {
+    background-color: rgba(248, 175, 86, 0.2);
+}
+
+.TaskItem:last-child {
+    border-bottom: none;
+}
+
+.TaskCheckbox {
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #FF8C00;
+}
+
+.TaskName {
+    flex: 1;
+    margin-left: 5px;
+}
+
+.TaskItem.low .TaskName {
+    color: #006633;
+}
+
+.TaskItem.medium .TaskName {
+    color: #E67600; 
+}
+
+.TaskItem.high .TaskName {
+    color: #B22222;
+}
+
+.TaskItem.completed .TaskName {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.AddButton {
+    background: none;
+    border: none;
+    color: #000000;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.AddButton:hover {
+    text-decoration: none;
+}
+
+.ProgressSection {
+    background-color: rgba(255, 255, 255, 0.0);
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.ProgressSection h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #000000;
+    font-weight: 500;
+}
+
+.ProgressBarContainer {
+    height: 12px;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.MultiColorProgress {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ProgressSegment {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.ProgressSegment.low {
+    background-color: #006633;
+}
+
+.ProgressSegment.medium {
+    background-color: #E67600;
+}
+
+.ProgressSegment.high {
+    background-color: #B22222;
+}
+
+.ProgressText {
+    font-size: 18px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.PriorityLegend {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.LegendItem {
+    display: flex;
+    align-items: center;
+}
+
+.LegendItem:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    border-radius: 2px;
+}
+
+.LegendItem.high:before {
+    background-color: #B22222;
+}
+
+.LegendItem.medium:before {
+    background-color: #E67600;
+}
+
+.LegendItem.low:before {
+    background-color: #006633;
+}
+
+.Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ModalContent {
+    background-color: #FFFFFF;
+    width: 90%;
+    max-width: 500px; /* Increased from 450px */
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s ease-out;
+    padding: 20px 30px; /* Added padding */
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 20px 0; /* Adjusted padding */
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 20px; /* Added margin */
+}
+
+.ModalHeader h3 {
+    margin: 0;
+    font-size: 22px; /* Increased from 18px */
+    color: #000000;
+    font-weight: 600;
+}
+
+.CloseButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000000;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 0 5px;
+}
+
+.CloseButton:hover {
+    color: #FF8C00;
+}
+
+.FormGroup {
+    padding: 15px 0; /* Changed from 15px 20px */
+    text-align: left; /* Changed from centered */
+}
+
+.FormGroup label {
+    display: block;
+    margin-bottom: 12px; /* Increased from 8px */
+    font-weight: 600;
+    color: #000000;
+    font-size: 16px; /* Increased from 14px */
+}
+
+.FormGroup input {
+    width: 90%; /* Changed from 87% */
+    padding: 14px 16px; /* Increased from 12px 15px */
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    font-size: 16px; /* Increased from 14px */
+    transition: border-color 0.2s;
+    margin-bottom: 20px; /* Added margin */
+}
+
+.FormGroup input:focus {
+    outline: none;
+    border-color: #FF8C00;
+    box-shadow: 0 0 0 2px rgba(255,140,0,0.2);
+}
+
+.PriorityOptions {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 20px 0; /* Added bottom margin */
+}
+
+.PriorityButton {
+    flex: 1;
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+/* Original colors when not clicked */
+.PriorityButton[data-priority="low"] {
+    background-color: #006633 !important; /* Dark green */
+    color: white;
+    border: none;
+}
+
+.PriorityButton[data-priority="medium"] {
+    background-color: #E67600 !important; /* Orange */
+    color: white;
+    border: none;
+}
+
+.PriorityButton[data-priority="high"] {
+    background-color: #B22222 !important; /* Red */
+    color: white;
+    border: none;
+}
+
+/* Lighter colors ONLY when clicked/active */
+.PriorityButton[data-priority="low"].active {
+    background-color: #02d16a !important; /* Light green */
+}
+
+.PriorityButton[data-priority="medium"].active {
+    background-color: #FFAA00 !important; /* Light orange */
+}
+
+.PriorityButton[data-priority="high"].active {
+    background-color: #ff3838 !important; /* Light red */
+}
+
+.ModalActions {
+    display: flex;
+    justify-content: center; /* Keep centered */
+    padding: 20px 0 0 0; /* Adjusted padding */
+    border-top: 1px solid rgba(0,0,0,0.1);
+    gap: 15px; /* Increased from 10px */
+    margin-top: 20px; /* Added margin */
+}
+
+.CancelButton {
+    padding: 12px 25px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.CancelButton:hover {
+    background-color: rgba(248, 175, 86, 0.2);
+}
+
+.SubmitButton {
+    padding: 12px 25px;
+    background-color: #0077B6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    font-size: 16px;
+}
+
+.SubmitButton:hover {
+    background-color: #0077B6;
+}
+
+.TaskItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    position: relative; /* Required for button positioning */
+}
+
+.TaskItem:hover .DeleteButton {
+    display: block; /* Make the button visible on hover */
+}
+
+.DeleteButton {
+    display: none; /* Hidden by default */
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    position: absolute; /* Positioning within the div */
+    right: 10px;
+}
+
+.DeleteButton:hover {
+    background-color: #c0392b; /* Darker shade on hover */
+}
+
+.AddTaskSeparator {
+    width: 100%;
+    border: none;
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.1); /* Light gray line */
+    margin-top: 10px;
+}
+
+.newAddButton {
+    background-color: #FF8C00;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.newAddButton:hover {
+    background-color: #E67600;
+    transform: translateY(-2px); /* Subtle lift effect on hover */
+}
+
+.nnnm {
+    margin-left: 5%;
+}
+
+.divClassButtonFor {
+    margin-top: -10px;
+    border-bottom: 0;
+
+    /*margin-left: 5%;*/
+    padding-left: 5%;
+}
+
+.no-decor {
+    text-decoration: none;
+}
