@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Planday.css';
 import axios from "axios";
 
-function PlanDay() {
+function PlanDay({ selectedDate }) {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
@@ -11,9 +11,10 @@ function PlanDay() {
         duration: ''
     });
 
-    const [currentDate, setCurrentDate] = useState({ day: "",
-                                                     month: "",
-                                                     year: "",
+
+    const [currentDate, setCurrentDate] = useState({ day: "", 
+                                                     month: "", 
+                                                     year: "", 
                                                      formatted: "" });
 
     const [timeInput, setTimeInput] = useState({
@@ -51,13 +52,13 @@ function PlanDay() {
     };
 
     useEffect(() => {
-        const date = new Date();
+        // Use the provided selectedDate or default to the current date
+        const date = selectedDate ? new Date(selectedDate) : new Date();
         const day = String(date.getDate()).padStart(2, "0");
         const month = date.toLocaleString("en-US", { month: "long" }).toUpperCase();
         const month_num = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear().toString();
-        const formatted = `${year}-${month_num}-${day}`;
-
+        const formatted = selectedDate || `${year}-${month_num}-${day}`;
         setCurrentDate({ day, month, year, formatted });
         fetchTasks(formatted);
     }, []);

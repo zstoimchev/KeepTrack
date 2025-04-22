@@ -1,15 +1,16 @@
 .PlanDayContainer {
+    display: relative;
     font-family: 'Arial', sans-serif;
     width: 70vw;
     /*max-height: 50vh;*/
     /*max-width: 100%;*/
-    /*margin: 0px 800px 0px 0px;*/
+    margin: 60px 0px 0px 60px;
     padding: 2px;
     color: #000000;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: relative;
+    align-self: center;
 }
 
 .DateHeader {
