@@ -99,6 +99,20 @@ export const getLongTermTasks = async (req, res) => {
     }
 };
 
+export const getShortTermByUserId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ success: false, msg: 'User ID is required' });
+        }
+        const tasks = await taskModel.getShortTermTaskByUserID(id);
+        res.status(200).json({ success: true, tasks });
+    } catch (error) {
+        console.error('Error fetching short-term tasks:', error);
+        res.status(500).json({ success: false, msg: 'Internal server error' });
+    }
+};
+
 export const updateLongTermTask = async (req, res) => {
     try {
         const { id } = req.params;

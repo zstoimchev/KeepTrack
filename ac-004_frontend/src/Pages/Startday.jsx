@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import './Startday.css';
 import axios from "axios";
 
-const Startday = () => {
+const Startday = ({userID}) => {
+
   const [activeTab, setActiveTab] = useState('Focus Time');
   const [timeLeft, setTimeLeft] = useState(1500); // 25 minutes in seconds
   const [isRunning, setIsRunning] = useState(false);
@@ -12,10 +13,49 @@ const Startday = () => {
   const [seconds, setSeconds] = useState(0);
 
   const [tasks, setTasks] = useState([]);
+  const [currIndex, setCurrIndex] = useState([0]);
+
+  const currentTask = tasks[currIndex];
+  const nextTask = tasks[currIndex + 1];
+
+useEffect(() => {
+  async function fetchTasks() {
+    try {
+      const res = await axios.get(`http://localhost:3000/tasks/short-term/${userID}`);
+      if (res.data.success) {
+        setTasks(res.data.tasks);
+        setCurrIndex(0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tasks", error);
+    }
+  }
+
+  if (userID) {
+    fetchTasks();
+  }
+}, [userID]);
+
+  const jumpToNextTask = () => {
+    if (currIndex + 1 < tasks.length) {
+      setCurrIndex(currIndex + 1);
+    } else {
+      alert("No more tasks for today.");
+    }
+  };
+
   const [firstTask, setFirstTask] = useState(null);
   const [taskDuration, setTaskDuration] = useState(null);
 
-  const fetchOneTask = async() => {
+  function onNextTask() {
+    if (currIndex + 1 < tasks.length) {
+      setCurrIndex(currIndex + 1);
+    } else {
+      alert("You finised all your tasks!");
+    }
+  }
+
+  /* const fetchOneTask = async() => {
     const user_id = localStorage.getItem("id");
     const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
       user_id }
@@ -48,27 +88,12 @@ const Startday = () => {
     }
   }, [taskDuration]);
 
-  /* const fetchShortTermTasks = async () => {
-    try {
-      const user_id = localStorage.getItem("id");
-      const response = await axios.post("http://localhost:3000/tasks/get-shortterm", { 
-        user_id 
-      });
-      setTasks(response.data.tasks);
-    } catch (err) {
-      console.log("No short-term tasks found");
-    }
-  };
-  
-  useEffect(() => {
-    fetchShortTermTasks();
-  }, []); */
-
   useEffect(() => {
     if (tasks.some(task => task.date === "longterm")) {
       console.error("Long-term task leaked!"); // vo slucaj da ebi db nes
     }
   }, [tasks]);
+ */
 
   const timerPresets = {
     'Focus Time': taskDuration || 1500,
@@ -122,8 +147,8 @@ const Startday = () => {
         <h2 className="task-text"> Current task </h2>
 
         <div className="startday-tasks">
-          {firstTask ? (
-            <h3>{firstTask.title}</h3>
+          {currentTask ? (
+            <h3>{currentTask.title}</h3>
           ) : (
             <p>No tasks available</p>
           )}
@@ -228,7 +253,7 @@ const Startday = () => {
         </div>
 
         <div className="startday-tasks">
-          Task From Plan Your Day Here
+          {nextTask ? nextTask.title : "No more tasks"}
         </div>
 
       </div>

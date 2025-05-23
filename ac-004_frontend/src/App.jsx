@@ -53,7 +53,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Calendar onDateSelect={handleDateSelect}/>} />
                             <Route path="/plan" element={<PlanDay selectedDate={selectedDate}/>} />
-                            <Route path="/start" element={<StartDay />} />
+                            <Route path="/start" element={<StartDay userID={userID} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Layout>
