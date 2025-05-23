@@ -59,6 +59,34 @@ tasks.post('/get-date/', async (req, res) => {
     }
 })
 
+tasks.post('/get-shortterm', async (req, res) => {
+    try {
+        const { user_id } = req.body;
+        const queryResult = await DB.getShortTermTasksByUserId(user_id);
+        
+        if (queryResult.length <= 0) { 
+            return res.status(200).json({ 
+                success: true, 
+                tasks: queryResult,
+                msg: "No short-term tasks found" 
+            });
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            tasks: queryResult,
+            msg: "Tasks fetched successfully" 
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ 
+            success: false, 
+            msg: "Server error" 
+        });
+    }
+});
+
 tasks.get('/get-month/', async (req, res) => {
     try {
         try {

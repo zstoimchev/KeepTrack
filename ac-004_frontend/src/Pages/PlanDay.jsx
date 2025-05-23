@@ -6,8 +6,8 @@ function PlanDay({ selectedDate }) {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
-        title: '', 
-        priority: null, 
+        title: '',
+        priority: null,
         duration: ''
     });
 
@@ -17,6 +17,11 @@ function PlanDay({ selectedDate }) {
                                                      year: "", 
                                                      formatted: "" });
 
+    const [timeInput, setTimeInput] = useState({
+        hours: '',
+        minutes: '' ,
+    });
+
     const fetchTasks = async (formatted) => {
         try {
             const user_id = localStorage.getItem("id");
@@ -24,13 +29,20 @@ function PlanDay({ selectedDate }) {
                 user_id, date: formatted
             });
             if (response.status === 200) {
-                setTasks(response.data.tasks.map(task => ({
-                    id: task.id || null,
-                    title: task.title || 'Untitled Task',
-                    priority: task.priority || 'Low',
-                    duration: task.duration || '0',
-                    completed: task.is_finished || false
-                })));
+                setTasks(response.data.tasks.map(task => {
+
+                    const hours = Math.floor(task.duration / 60);
+                    const minutes = task.duration % 60;
+
+                    return {
+                        id: task.id || null,
+                        title: task.title || 'Untitled Task',
+                        priority: task.priority || 'Low',
+                        duration: task.duration || 0,
+                        displayDuration: `${hours}h ${minutes}m`,
+                        completed: task.is_finished || false
+                      };
+                }));
             } else {
                 alert(response.data.msg);
             }
@@ -58,10 +70,11 @@ function PlanDay({ selectedDate }) {
     const closeModal = () => {
         setShowModal(false);
         setNewTask({
-            title: '', 
-            priority: null, 
+            title: '',
+            priority: null,
             duration: ''
         });
+        setTimeInput({hours:'', minutes: ''});
     };
 
     const handleInputChange = (e) => {
@@ -74,6 +87,19 @@ function PlanDay({ selectedDate }) {
     const handlePriorityChange = (priority) => {
         setNewTask(prev => ({
             ...prev, priority
+        }));
+    };
+
+    const handleTimeChange = (e, field) => {
+        let value = e.target.value;
+
+        if (value.length > 2) return;
+        if (field === 'hours' && parseInt(value) > 23) value = '23';
+        if (field === 'minutes' && parseInt(value) > 59) value = '59';
+
+        setTimeInput(prev => ({
+          ...prev,
+          [field]: value
         }));
     };
 
@@ -95,7 +121,15 @@ function PlanDay({ selectedDate }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newTask.title.trim() || !newTask.duration.trim()) return;
+
+        const totalMinutes = (parseInt(timeInput.hours) || 0) * 60 +
+            (parseInt(timeInput.minutes) || 0);
+
+        if (!newTask.title.trim() || totalMinutes <= 0) {
+            alert("Please enter a title and valid duration");
+            return;
+        }
+
         try {
             const user_id = localStorage.getItem("id");
             const response = await axios.post("http://localhost:3000/tasks/add", {
@@ -103,7 +137,7 @@ function PlanDay({ selectedDate }) {
                 title: newTask.title,
                 date: currentDate.formatted,
                 priority: newTask.priority,
-                duration: newTask.duration,
+                duration: totalMinutes,
             });
 
             if (response.status === 201) {
@@ -223,19 +257,19 @@ function PlanDay({ selectedDate }) {
                             <button className="CloseButton" onClick={closeModal}>×</button>
                         </div>
 
-                        <form onSubmit={handleSubmit}>
-                            <div className="FormGroup">
-                                <label htmlFor="taskName">Task Name</label>
-                                <input
-                                    id="taskName"
-                                    type="text"
-                                    name="title"
-                                    value={newTask.title}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter task name"
-                                    required
-                                />
-                            </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="FormGroup">
+                        <label htmlFor="taskName">Task Name</label>
+                        <input
+                            id="taskName"
+                            type="text"
+                            name="title"
+                            value={newTask.title}
+                            onChange={handleInputChange}
+                            placeholder="Enter task name"
+                            required
+                        />
+                    </div>
 
                             <div className="FormGroup">
                                 <label>Priority</label>
@@ -267,18 +301,32 @@ function PlanDay({ selectedDate }) {
                                 </div>
                             </div>
 
-                            <div className="FormGroup">
-                                <label htmlFor="duration">Duration</label>
+                    <div className="FormGroup">
+                        <label htmlFor="duration">Duration</label>
+                            <div className="duration-input">
                                 <input
-                                    id="duration"
-                                    type="text"
-                                    name="duration"
-                                    value={newTask.duration}
-                                    onChange={handleInputChange}
-                                    placeholder="e.g. 30 min, 1 hour"
-                                    required
+                                    type="number"
+                                    value={timeInput.hours}
+                                    onChange={(e) => handleTimeChange(e, 'hours')}
+                                    placeholder="00"
+                                    min="0"
+                                    max="23"
+                                    maxLength={2}
                                 />
-                            </div>
+                                <span>Hours</span>
+
+                                <input
+                                    type="number"
+                                    value={timeInput.minutes}
+                                    onChange={(e) => handleTimeChange(e, 'minutes')}
+                                    placeholder="00"
+                                    min="0"
+                                    max="59"
+                                    maxLength={2}
+                                />
+                            <span>Minutes</span>
+                        </div>
+                    </div>
 
                             <div className="ModalActions">
                                 <button type="button" className="CancelButton" onClick={closeModal}>

@@ -1,8 +1,10 @@
 // Startday.jsx
 import React, { useState, useEffect } from 'react';
 import './Startday.css';
+import axios from "axios";
 
-const Startday = () => {
+const Startday = ({userID}) => {
+
   const [activeTab, setActiveTab] = useState('Focus Time');
   const [timeLeft, setTimeLeft] = useState(1500); // 25 minutes in seconds
   const [isRunning, setIsRunning] = useState(false);
@@ -10,8 +12,91 @@ const Startday = () => {
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
 
+  const [tasks, setTasks] = useState([]);
+  const [currIndex, setCurrIndex] = useState([0]);
+
+  const currentTask = tasks[currIndex];
+  const nextTask = tasks[currIndex + 1];
+
+useEffect(() => {
+  async function fetchTasks() {
+    try {
+      const res = await axios.get(`http://localhost:3000/tasks/short-term/${userID}`);
+      if (res.data.success) {
+        setTasks(res.data.tasks);
+        setCurrIndex(0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tasks", error);
+    }
+  }
+
+  if (userID) {
+    fetchTasks();
+  }
+}, [userID]);
+
+  const jumpToNextTask = () => {
+    if (currIndex + 1 < tasks.length) {
+      setCurrIndex(currIndex + 1);
+    } else {
+      alert("No more tasks for today.");
+    }
+  };
+
+  const [firstTask, setFirstTask] = useState(null);
+  const [taskDuration, setTaskDuration] = useState(null);
+
+  function onNextTask() {
+    if (currIndex + 1 < tasks.length) {
+      setCurrIndex(currIndex + 1);
+    } else {
+      alert("You finised all your tasks!");
+    }
+  }
+
+  /* const fetchOneTask = async() => {
+    const user_id = localStorage.getItem("id");
+    const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
+      user_id }
+    );
+    setFirstTask(response.data.tasks[6] || null);
+  };
+
+  useEffect(() => { fetchOneTask(); }, []);
+  
+  useEffect(() => {
+    const fetchTaskDuration = async () => {
+      try {
+        const user_id = localStorage.getItem("id");
+        const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
+          user_id }
+        );
+        const taskMinutes = response.data.tasks[6]?.duration || 25;
+        setTimeLeft(taskMinutes * 60);
+      } catch (err) {
+        console.log("Using default timer (25min)");
+      }
+    };
+    fetchTaskDuration();
+  }, []);
+
+  useEffect(() => {
+    if (taskDuration) {
+      setTimeLeft(taskDuration);
+      setActiveTab('Task Duration');
+    }
+  }, [taskDuration]);
+
+  useEffect(() => {
+    if (tasks.some(task => task.date === "longterm")) {
+      console.error("Long-term task leaked!"); // vo slucaj da ebi db nes
+    }
+  }, [tasks]);
+ */
+
   const timerPresets = {
-    'Focus Time': 1500,
+    'Focus Time': taskDuration || 1500,
     'Short Break': 300,
     'Long Break': 900
   };
@@ -41,7 +126,7 @@ const Startday = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setTimeLeft(timerPresets[tab]);
+    setTimeLeft(timerPresets[tab]); // Automatically uses taskDuration if tab is 'Task Duration'
     setIsRunning(false);
     setIsEditing(false);
   };
@@ -56,6 +141,20 @@ const Startday = () => {
   };
 
   return (
+    <div className="dynamic-container">
+
+      <div className="startday-current-task">
+        <h2 className="task-text"> Current task </h2>
+
+        <div className="startday-tasks">
+          {currentTask ? (
+            <h3>{currentTask.title}</h3>
+          ) : (
+            <p>No tasks available</p>
+          )}
+        </div>
+      </div>
+
     <div className="startday-container">
       <div className="startday-tabs">
         {Object.keys(timerPresets).map((tab) => (
@@ -145,6 +244,20 @@ const Startday = () => {
           </div>
         )}
       </div>
+    </div>
+
+      <div className="startday-current-task">
+
+        <div className="task-text">
+          Next Task
+        </div>
+
+        <div className="startday-tasks">
+          {nextTask ? nextTask.title : "No more tasks"}
+        </div>
+
+      </div>
+
     </div>
   );
 };

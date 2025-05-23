@@ -21,16 +21,7 @@
 
 .Dynamic {
     display: flex;
-    justify-content: center; /* Center content horizontally */
+    justify-content: column; /* Center content horizontally */
     align-items: center; /* Center content vertically */
     width: 100%; /* Ensure it takes full width */
-    /*height: 100%; !* Ensure it takes full height *!*/
-}
-
-.Calendar {
-    width: auto; /* Allow the child to size itself dynamically */
-    height: auto; /* Allow the child to size itself dynamically */
-    display: flex; /* Optional: For flexibility inside Calendar */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
 }

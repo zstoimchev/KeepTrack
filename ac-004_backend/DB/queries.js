@@ -140,6 +140,17 @@ dataPool.getLongTermTasksByUserId = (user_id) => {
     })
 }
 
+dataPool.getShortTermTasksByUserId = (user_id) => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM Calendar WHERE user_id = ? AND date != "longterm" ', [user_id] , (err, res) => { 
+            if (err) {
+                return reject(err)
+            }
+            return resolve(res)
+        })
+    })
+}
+
 dataPool.updateLongTermTask = (id, title, duration) => {
     return new Promise((resolve, reject) => {
         connection.query(

@@ -131,7 +131,8 @@ const Sidebar = ({onLogout}) => {
         setTasks(updatedTasks);
     };
 
-    return (<div className="sidebar">
+    return (
+    <div className="sidebar">
         <div className="user-section">
             <div className="user-icon"></div>
             <p>{localStorage.getItem("name") || "User"}</p>

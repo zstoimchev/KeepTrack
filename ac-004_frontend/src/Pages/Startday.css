@@ -1,13 +1,29 @@
 /* Startday.css */
+.dynamic-container {
+    display: flex;         
+    flex-direction: column;
+    width: 100%; 
+    height: 100%;
+    justify-content: space-evenly;
+}
+
 .startday-container {
+    flex: 3;
+    align-self: center;
     font-family: 'Arial', sans-serif;
-    margin: 50px 100px 50px 50px;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
+    padding: 20px 20px 20px 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    width: calc(100% - 150px);
-    max-width: 600px;
+    width: 65%;
+}
+
+.startday-current-task {
+    flex: 1;
+    align-items:center;
+    justify-content: space-evenly;
+    margin: 10px 0px 10px 0px;
+    width: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .startday-tabs {
@@ -18,8 +34,26 @@
     margin-bottom: 20px;
 }
 
+.startday-tasks {
+    margin: 15px 0px 15px 0px;
+    background-color: #f5f5f5;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.task-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #f5f5f5;
+    border-top: 3px solid #ffffff; 
+    width: 100%;
+    text-align:center;
+}
+
 .startday-tab-button {
-    padding: 10px 20px;
+    padding: 5px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -27,7 +61,6 @@
     background-color: #e74c3c;
     color: white;
     flex: 1 1 auto;
-    min-width: 100px;
 }
 
 .startday-tab-button.inactive {
@@ -37,9 +70,9 @@
 
 .startday-timer-display {
     text-align: center;
-    font-size: clamp(60px, 15vw, 80px);
+    font-size: clamp(30px, 10vw, 40px);
     font-weight: bold;
-    margin: clamp(20px, 10vw, 40px) 0;
+    margin: clamp(10px,50vw, 20px) 0;
     color: #333;
 }
 

@@ -92,6 +92,22 @@ const taskModel = {
         }
     },
 
+    
+    // fetch by short term
+    getShortTermTaskByUserID: async(user_id) => {
+        try {
+            const q = query(collection(db, 'tasks'), where('user_id', '==', user_id), where('date', '!=', "long-term"));
+            const querySnapshot = await getDocs(q);
+        const tasks = [];
+            querySnapshot.forEach((doc) => {
+                tasks.push({ id: doc.id, ...doc.data() });
+            });
+            return tasks;
+        } catch (err) {
+            throw new Error('Error fetching short-term tasks: ' + err.message);
+        }
+    },
+
     // Update a long-term task
     updateLongTermTask: async (id, title, duration) => {
         try {
@@ -124,6 +140,7 @@ const taskModel = {
             throw new Error('Error deleting task: ' + err.message);
         }
     }
+
 };
 
 export default taskModel;
