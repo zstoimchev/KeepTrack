@@ -94,11 +94,18 @@ const taskModel = {
 
     
     // fetch by short term
-    getShortTermTaskByUserID: async(user_id) => {
+    getShortTermTaskByUserID: async (user_id) => {
         try {
-            const q = query(collection(db, 'tasks'), where('user_id', '==', user_id), where('date', '!=', "long-term"));
+            const today = new Date().toISOString().split("T")[0];
+
+            const q = query(
+                collection(db, 'tasks'),
+                where('user_id', '==', user_id),
+                where('date', '==', today),
+                where('is_finished', '==', false)
+            );
             const querySnapshot = await getDocs(q);
-        const tasks = [];
+            const tasks = [];
             querySnapshot.forEach((doc) => {
                 tasks.push({ id: doc.id, ...doc.data() });
             });
@@ -139,7 +146,7 @@ const taskModel = {
         } catch (err) {
             throw new Error('Error deleting task: ' + err.message);
         }
-    }
+    },
 
 };
 

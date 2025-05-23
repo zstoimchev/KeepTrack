@@ -127,3 +127,21 @@ export const updateLongTermTask = async (req, res) => {
         res.status(500).json({ success: false, msg: 'Internal server error' });
     }
 };
+
+export const updateTaskFinished = async (req, res) => {
+  const { id } = req.params; // task id from URL param
+  const { is_finished } = req.body; // boolean true/false from body
+
+  if (typeof is_finished !== 'boolean') {
+    return res.status(400).json({ success: false, message: 'is_finished must be boolean' });
+  }
+
+  try {
+    const taskDoc = doc(db, 'tasks', id);
+    await updateDoc(taskDoc, { is_finished });
+
+    return res.json({ success: true, message: `Task marked as ${is_finished ? 'finished' : 'unfinished'}` });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Error updating task: ' + error.message });
+  }
+};

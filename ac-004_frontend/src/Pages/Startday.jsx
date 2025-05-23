@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './Startday.css';
 import axios from "axios";
 
-const Startday = ({userID}) => {
+const Startday = ({ userID }) => {
 
   const [activeTab, setActiveTab] = useState('Focus Time');
   const [timeLeft, setTimeLeft] = useState(1500); // 25 minutes in seconds
@@ -12,95 +12,78 @@ const Startday = ({userID}) => {
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
 
+  //zemas tasks i mestis tasks, currindex e za momentalnio task da se koristi
   const [tasks, setTasks] = useState([]);
-  const [currIndex, setCurrIndex] = useState([0]);
+  const [currIndex, setCurrIndex] = useState(0);
 
   const currentTask = tasks[currIndex];
   const nextTask = tasks[currIndex + 1];
 
-useEffect(() => {
-  async function fetchTasks() {
-    try {
-      const res = await axios.get(`http://localhost:3000/tasks/short-term/${userID}`);
-      if (res.data.success) {
-        setTasks(res.data.tasks);
-        setCurrIndex(0);
-      }
-    } catch (error) {
-      console.error("Failed to fetch tasks", error);
-    }
-  }
-
-  if (userID) {
-    fetchTasks();
-  }
-}, [userID]);
-
-  const jumpToNextTask = () => {
-    if (currIndex + 1 < tasks.length) {
-      setCurrIndex(currIndex + 1);
-    } else {
-      alert("No more tasks for today.");
-    }
-  };
-
-  const [firstTask, setFirstTask] = useState(null);
-  const [taskDuration, setTaskDuration] = useState(null);
-
-  function onNextTask() {
-    if (currIndex + 1 < tasks.length) {
-      setCurrIndex(currIndex + 1);
-    } else {
-      alert("You finised all your tasks!");
-    }
-  }
-
-  /* const fetchOneTask = async() => {
-    const user_id = localStorage.getItem("id");
-    const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
-      user_id }
-    );
-    setFirstTask(response.data.tasks[6] || null);
-  };
-
-  useEffect(() => { fetchOneTask(); }, []);
-  
+  // site uslovi za da gi zema se vo taskmodel/controller , pooptimizirano e vo logika na ako se 1000 tasks tamu neka napraj filter ne ovde
   useEffect(() => {
-    const fetchTaskDuration = async () => {
+    async function fetchTasks() {
       try {
-        const user_id = localStorage.getItem("id");
-        const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
-          user_id }
-        );
-        const taskMinutes = response.data.tasks[6]?.duration || 25;
-        setTimeLeft(taskMinutes * 60);
-      } catch (err) {
-        console.log("Using default timer (25min)");
+        const res = await axios.get(`http://localhost:3000/tasks/short-term/${userID}`);
+        if (res.data.success) {
+          setTasks(res.data.tasks);
+          setCurrIndex(0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch tasks", error);
       }
-    };
-    fetchTaskDuration();
-  }, []);
+    }
+
+    if (userID) {
+      fetchTasks();
+    }
+  }, [userID]);
+
+  // logiki 2-3 se za da zemi prefrli i syncni duration
+    useEffect(() => {
+    if (timeLeft === 0 && isRunning) {
+      setIsRunning(false);
+      onNextTask();
+    }
+  }, [timeLeft, isRunning]);
 
   useEffect(() => {
-    if (taskDuration) {
-      setTimeLeft(taskDuration);
+    if (tasks[currIndex]) {
+      setTimeLeft(tasks[currIndex].duration);
       setActiveTab('Task Duration');
+      setIsRunning(false);
     }
-  }, [taskDuration]);
+  }, [currIndex, tasks]);
 
-  useEffect(() => {
-    if (tasks.some(task => task.date === "longterm")) {
-      console.error("Long-term task leaked!"); // vo slucaj da ebi db nes
+  //prefrlanje na index za sleden task da se namesti 
+  function onNextTask() {
+    setTasks(prevTasks => {
+      const updatedTasks = [...prevTasks];
+      if (updatedTasks[currIndex]) {
+        updatedTasks[currIndex].is_finished = true;  // Mark current as finished
+      }
+      return updatedTasks;
+    });
+
+    if (currIndex + 1 < tasks.length) {
+      setCurrIndex(currIndex + 1);  // Move to next task
+    } else {
+      alert("You finished all your tasks!");
     }
-  }, [tasks]);
- */
+  }
 
+  //smeniv malce kod i simplificirav za da trgni odavde taskduration a ne kako api pulling
+  const taskDuration = currentTask && currentTask.duration
+    ? currentTask.duration * 60  // convert minutes to seconds
+    : null;  // or undefined if no duration available
+
+  //ako nema task chmaj na 25min
   const timerPresets = {
     'Focus Time': taskDuration || 1500,
     'Short Break': 300,
     'Long Break': 900
   };
 
+  //nebitni sranja za tajmero
   useEffect(() => {
     let interval;
     if (isRunning) {
@@ -126,7 +109,7 @@ useEffect(() => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setTimeLeft(timerPresets[tab]); // Automatically uses taskDuration if tab is 'Task Duration'
+    setTimeLeft(timerPresets[tab]);
     setIsRunning(false);
     setIsEditing(false);
   };
@@ -155,96 +138,96 @@ useEffect(() => {
         </div>
       </div>
 
-    <div className="startday-container">
-      <div className="startday-tabs">
-        {Object.keys(timerPresets).map((tab) => (
-          <button
-            key={tab}
-            className={`startday-tab-button ${activeTab !== tab ? 'inactive' : ''}`}
-            onClick={() => handleTabChange(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+      <div className="startday-container">
+        <div className="startday-tabs">
+          {Object.keys(timerPresets).map((tab) => (
+            <button
+              key={tab}
+              className={`startday-tab-button ${activeTab !== tab ? 'inactive' : ''}`}
+              onClick={() => handleTabChange(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
-      <div className="startday-timer-display">
-        {formatTime(timeLeft)}
-      </div>
+        <div className="startday-timer-display">
+          {formatTime(timeLeft)}
+        </div>
 
-      <div className="startday-button-container">
-        <button
-          className="startday-main-button"
-          style={{ backgroundColor: '#e74c3c', color: 'white' }}
-          onClick={() => setIsRunning(!isRunning)}
-        >
-          {isRunning ? 'PAUSE' : 'START'}
-        </button>
-
-        {!isEditing ? (
+        <div className="startday-button-container">
           <button
             className="startday-main-button"
-            style={{ backgroundColor: '#666', color: 'white' }}
-            onClick={() => {
-              const mins = Math.floor(timeLeft / 60);
-              const secs = timeLeft % 60;
-              setMinutes(mins);
-              setSeconds(secs);
-              setIsEditing(true);
-            }}
+            style={{ backgroundColor: '#e74c3c', color: 'white' }}
+            onClick={() => setIsRunning(!isRunning)}
           >
-            CHANGE TIME
+            {isRunning ? 'PAUSE' : 'START'}
           </button>
-        ) : (
-          <div className="startday-edit-container">
-            <div className="startday-input-group">
-              <div className="startday-time-input-container">
-                <span className="startday-input-label">Minutes</span>
-                <input
-                  type="number"
-                  className="startday-time-input"
-                  value={minutes}
-                  onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
-                  min="0"
-                />
-              </div>
-              <div className="startday-time-input-container">
-                <span className="startday-input-label">Seconds</span>
-                <input
-                  type="number"
-                  className="startday-time-input"
-                  value={seconds}
-                  onChange={(e) => {
-                    let value = parseInt(e.target.value) || 0;
-                    value = Math.min(59, Math.max(0, value));
-                    setSeconds(value);
-                  }}
-                  min="0"
-                  max="59"
-                />
-              </div>
-            </div>
 
-            <div className="startday-action-buttons">
-              <button
-                className="startday-main-button"
-                style={{ backgroundColor: '#4CAF50', flex: 1, maxWidth: '120px' }}
-                onClick={handleSaveTime}
-              >
-                SAVE
-              </button>
-              <button
-                className="startday-main-button"
-                style={{ backgroundColor: '#666', flex: 1, maxWidth: '120px' }}
-                onClick={() => setIsEditing(false)}
-              >
-                CANCEL
-              </button>
+          {!isEditing ? (
+            <button
+              className="startday-main-button"
+              style={{ backgroundColor: '#666', color: 'white' }}
+              onClick={() => {
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                setMinutes(mins);
+                setSeconds(secs);
+                setIsEditing(true);
+              }}
+            >
+              CHANGE TIME
+            </button>
+          ) : (
+            <div className="startday-edit-container">
+              <div className="startday-input-group">
+                <div className="startday-time-input-container">
+                  <span className="startday-input-label">Minutes</span>
+                  <input
+                    type="number"
+                    className="startday-time-input"
+                    value={minutes}
+                    onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
+                    min="0"
+                  />
+                </div>
+                <div className="startday-time-input-container">
+                  <span className="startday-input-label">Seconds</span>
+                  <input
+                    type="number"
+                    className="startday-time-input"
+                    value={seconds}
+                    onChange={(e) => {
+                      let value = parseInt(e.target.value) || 0;
+                      value = Math.min(59, Math.max(0, value));
+                      setSeconds(value);
+                    }}
+                    min="0"
+                    max="59"
+                  />
+                </div>
+              </div>
+
+              <div className="startday-action-buttons">
+                <button
+                  className="startday-main-button"
+                  style={{ backgroundColor: '#4CAF50', flex: 1, maxWidth: '120px' }}
+                  onClick={handleSaveTime}
+                >
+                  SAVE
+                </button>
+                <button
+                  className="startday-main-button"
+                  style={{ backgroundColor: '#666', flex: 1, maxWidth: '120px' }}
+                  onClick={() => setIsEditing(false)}
+                >
+                  CANCEL
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
 
       <div className="startday-current-task">
 
