@@ -7,7 +7,8 @@ import {
     where,
     doc,
     updateDoc,
-    deleteDoc
+    deleteDoc,
+    getDoc,
 } from 'firebase/firestore';
 
 const taskModel = {
@@ -145,6 +146,20 @@ const taskModel = {
             return { success: true };
         } catch (err) {
             throw new Error('Error deleting task: ' + err.message);
+        }
+    },
+
+    getTaskById: async (id) => {
+        try {
+            const taskDoc = doc(db, 'tasks', id);
+            const taskSnapshot = await getDoc(taskDoc);
+            if (taskSnapshot.exists()) {
+                return { id: taskSnapshot.id, ...taskSnapshot.data() };
+            } else {
+                return null;
+            }
+        } catch (err) {
+            throw new Error('Error fetching task by ID: ' + err.message);
         }
     },
 
