@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import "./Sidebar.css";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios"; // Add axios for API requests
 
 const Sidebar = ({onLogout}) => {
@@ -201,8 +201,9 @@ const Sidebar = ({onLogout}) => {
         </div>
 
         <div className="button-section">
-            <p>SETTINGS</p>
-            <p onClick={handleLogout}>LOG OUT</p>
+            {/*<p onClick={() => window.location.href = '/settings'}>SETTINGS</p>*/}
+            <Link to="/settings" className="button-section">SETTINGS</Link> {/* TODO: add hover effect */}
+            <p className="button-section" onClick={handleLogout}>LOG OUT</p>
         </div>
     </div>);
 };
