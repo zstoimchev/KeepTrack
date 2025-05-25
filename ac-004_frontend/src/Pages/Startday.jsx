@@ -5,7 +5,7 @@ import axios from "axios";
 const Startday = ({userID}) => {
 
     const [activeTab, setActiveTab] = useState('Focus Time');
-    const [timeLeft, setTimeLeft] = useState(1500); // Default: 25 minutes (Focus Time)
+    const [timeLeft, setTimeLeft] = useState(1500);
     const [isRunning, setIsRunning] = useState(false);
 
     const [tasks, setTasks] = useState([]);
@@ -34,7 +34,7 @@ const Startday = ({userID}) => {
                     setTasks(allTasks);
                     setCurrIndex(firstUnfinishedIndex !== -1 ? firstUnfinishedIndex : null);
                     if (firstUnfinishedIndex !== -1) {
-                        setTimeLeft(allTasks[firstUnfinishedIndex].duration * 60); // duration in seconds
+                        setTimeLeft(allTasks[firstUnfinishedIndex].duration * 60);
                     }
                 }
             } catch (error) {
@@ -49,9 +49,9 @@ const Startday = ({userID}) => {
 
     // Timer presets for Breaks and Focus Time
     const timerPresets = {
-        'Focus Time': currentTask ? currentTask.duration * 60 : null, // Use task duration or null if no task
-        'Short Break': 300, // 5 minutes
-        'Long Break': 900  // 15 minutes
+        'Focus Time': currentTask ? currentTask.duration * 60 : null,
+        'Short Break': 300,
+        'Long Break': 900
     };
 
     // Timer logic
@@ -84,41 +84,33 @@ const Startday = ({userID}) => {
         const current = tasks[currIndex];
         if (current) {
             try {
-                // Optimistic local update
-                const updatedTasks = tasks.map((task, index) =>
-                    index === currIndex ? {...task, is_finished: true} : task
-                );
+                const updatedTasks = tasks.map((task, index) => index === currIndex ? {
+                    ...task, is_finished: true
+                } : task);
                 setTasks(updatedTasks);
 
                 await axios.put(`http://localhost:3000/tasks/update-completion/${current.id}`);
 
-                // Check if all tasks are now finished
                 const hasUnfinishedTasks = updatedTasks.some(task => !task.is_finished);
                 setAllTasksFinished(!hasUnfinishedTasks);
 
             } catch (error) {
-                // Revert on error
                 console.error("Failed to mark task as finished:", error);
                 setTasks(tasks);
             }
         }
     };
 
-    // Set the next task as the current task
     const setNextTask = () => {
-        // Find the next unfinished task
-        const nextUnfinishedIndex = tasks.findIndex((task, index) =>
-            index > currIndex && !task.is_finished
-        );
+        const nextUnfinishedIndex = tasks.findIndex((task, index) => index > currIndex && !task.is_finished);
 
         if (nextUnfinishedIndex !== -1) {
             setCurrIndex(nextUnfinishedIndex);
             setTimeLeft(tasks[nextUnfinishedIndex].duration * 60);
         } else {
-            // No more unfinished tasks - reset everything
             setCurrIndex(null);
             setTimeLeft(null);
-            setActiveTab('Focus Time'); // Reset to Focus Time tab
+            setActiveTab('Focus Time');
             setIsRunning(false);
         }
     };
@@ -134,7 +126,7 @@ const Startday = ({userID}) => {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
         if (tab === 'Focus Time' && !currentTask) {
-            setTimeLeft(null);  // Disable the timer when there's no current task in Focus Time mode
+            setTimeLeft(null);
         } else {
             setTimeLeft(timerPresets[tab]);
         }
@@ -157,7 +149,6 @@ const Startday = ({userID}) => {
                     key={tab}
                     className={`startday-tab-button ${activeTab !== tab ? 'inactive' : ''}`}
                     onClick={() => handleTabChange(tab)}
-                    // disabled={tab === 'Focus Time' && !currentTask} // Disable Focus Time tab when there's no current task
                 >
                     {tab}
                 </button>))}
@@ -168,14 +159,15 @@ const Startday = ({userID}) => {
             </div>
 
             <div className="startday-button-container">
-                <button
+                {activeTab === 'Focus Time' && allTasksFinished ? null : (<button
                     className="startday-main-button"
                     style={{backgroundColor: '#e74c3c', color: 'white'}}
                     onClick={() => setIsRunning(!isRunning)}
-                    disabled={timeLeft === null} // Disable the button when there's no timer to start
+                    disabled={timeLeft === null}
                 >
                     {isRunning ? 'PAUSE' : 'START'}
-                </button>
+                </button>)}
+
             </div>
         </div>
 
@@ -186,10 +178,9 @@ const Startday = ({userID}) => {
             </div>
 
             <div className="startday-tasks">
-                {tasks.find((task, index) => index > currIndex && !task.is_finished)
-                    ? <h3>{tasks.find((task, index) => index > currIndex && !task.is_finished).title}</h3>
-                    : <p className="no-tasks-message">No more tasks</p>
-                }
+                {tasks.find((task, index) => index > currIndex && !task.is_finished) ?
+                    <h3>{tasks.find((task, index) => index > currIndex && !task.is_finished).title}</h3> :
+                    <p className="no-tasks-message">No more tasks</p>}
             </div>
         </div>
     </div>);
