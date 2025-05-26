@@ -21,22 +21,22 @@ const Navbar = () => {
     // };
 
     // this is random quote
-    const fetchQuote = async () => {
-        try {
-            const response = await fetch('https://qapi.vercel.app/api/random');
-            const data = await response.json();
+    // const fetchQuote = async () => {
+    //     try {
+    //         const response = await fetch('https://qapi.vercel.app/api/random');
+    //         const data = await response.json();
+    //
+    //         // Set the quote and author from API response
+    //         setQuote(data.quote);
+    //     } catch (error) {
+    //         console.error('Error fetching quote:', error);
+    //         setQuote("The best way to predict the future is to create it."); // Fallback quote
+    //     }
+    // };
 
-            // Set the quote and author from API response
-            setQuote(data.quote);
-        } catch (error) {
-            console.error('Error fetching quote:', error);
-            setQuote("The best way to predict the future is to create it."); // Fallback quote
-        }
-    };
-
-    useEffect(() => {
-        fetchQuote();
-    }, []);
+    // useEffect(() => {
+    //     fetchQuote();
+    // }, []);
 
     return (<div className="header-container">
         <header className="quote-header">

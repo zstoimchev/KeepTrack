@@ -6,6 +6,7 @@ import StartDay from "./Pages/Startday.jsx";
 import { useState } from "react";
 import Login from "./Pages/Login.jsx";
 import Register from "./Pages/Register.jsx";
+import Settings from "./Pages/Settings.jsx";
 
 function App() {
     // State for userID and userEmail
@@ -54,6 +55,7 @@ function App() {
                             <Route path="/" element={<Calendar onDateSelect={handleDateSelect}/>} />
                             <Route path="/plan" element={<PlanDay selectedDate={selectedDate}/>} />
                             <Route path="/start" element={<StartDay userID={userID} />} />
+                            <Route path="/settings" element={<Settings userID={userID} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Layout>

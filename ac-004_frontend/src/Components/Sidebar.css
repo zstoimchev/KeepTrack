@@ -99,6 +99,9 @@ input {
     cursor: pointer;
     padding: 10px;
     text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .button-section p {

@@ -7,7 +7,8 @@ import {
     where,
     doc,
     updateDoc,
-    deleteDoc
+    deleteDoc,
+    getDoc,
 } from 'firebase/firestore';
 
 const taskModel = {
@@ -94,11 +95,18 @@ const taskModel = {
 
     
     // fetch by short term
-    getShortTermTaskByUserID: async(user_id) => {
+    getShortTermTaskByUserID: async (user_id) => {
         try {
-            const q = query(collection(db, 'tasks'), where('user_id', '==', user_id), where('date', '!=', "long-term"));
+            const today = new Date().toISOString().split("T")[0];
+
+            const q = query(
+                collection(db, 'tasks'),
+                where('user_id', '==', user_id),
+                where('date', '==', today),
+                where('is_finished', '==', false)
+            );
             const querySnapshot = await getDocs(q);
-        const tasks = [];
+            const tasks = [];
             querySnapshot.forEach((doc) => {
                 tasks.push({ id: doc.id, ...doc.data() });
             });
@@ -139,7 +147,21 @@ const taskModel = {
         } catch (err) {
             throw new Error('Error deleting task: ' + err.message);
         }
-    }
+    },
+
+    getTaskById: async (id) => {
+        try {
+            const taskDoc = doc(db, 'tasks', id);
+            const taskSnapshot = await getDoc(taskDoc);
+            if (taskSnapshot.exists()) {
+                return { id: taskSnapshot.id, ...taskSnapshot.data() };
+            } else {
+                return null;
+            }
+        } catch (err) {
+            throw new Error('Error fetching task by ID: ' + err.message);
+        }
+    },
 
 };
 

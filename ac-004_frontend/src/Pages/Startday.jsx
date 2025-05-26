@@ -1,265 +1,189 @@
-// Startday.jsx
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import './Startday.css';
 import axios from "axios";
 
 const Startday = ({userID}) => {
 
-  const [activeTab, setActiveTab] = useState('Focus Time');
-  const [timeLeft, setTimeLeft] = useState(1500); // 25 minutes in seconds
-  const [isRunning, setIsRunning] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [minutes, setMinutes] = useState(25);
-  const [seconds, setSeconds] = useState(0);
+    const [activeTab, setActiveTab] = useState('Focus Time');
+    const [timeLeft, setTimeLeft] = useState(1500);
+    const [isRunning, setIsRunning] = useState(false);
 
-  const [tasks, setTasks] = useState([]);
-  const [currIndex, setCurrIndex] = useState([0]);
+    const [tasks, setTasks] = useState([]);
+    const [currIndex, setCurrIndex] = useState(0);
 
-  const currentTask = tasks[currIndex];
-  const nextTask = tasks[currIndex + 1];
+    const currentTask = tasks.find((task, index) => index === currIndex && !task.is_finished);
 
-useEffect(() => {
-  async function fetchTasks() {
-    try {
-      const res = await axios.get(`http://localhost:3000/tasks/short-term/${userID}`);
-      if (res.data.success) {
-        setTasks(res.data.tasks);
-        setCurrIndex(0);
-      }
-    } catch (error) {
-      console.error("Failed to fetch tasks", error);
-    }
-  }
+    const [allTasksFinished, setAllTasksFinished] = useState(false);
 
-  if (userID) {
-    fetchTasks();
-  }
-}, [userID]);
+    // Fetch tasks for the day
+    useEffect(() => {
+        async function fetchTasks() {
+            try {
+                const date = new Date();
+                const day = String(date.getDate()).padStart(2, "0");
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const year = date.getFullYear();
+                const today = `${year}-${month}-${day}`;
+                const res = await axios.post('http://localhost:3000/tasks/get-date', {
+                    user_id: userID, date: today
+                });
 
-  const jumpToNextTask = () => {
-    if (currIndex + 1 < tasks.length) {
-      setCurrIndex(currIndex + 1);
-    } else {
-      alert("No more tasks for today.");
-    }
-  };
+                if (res.data.success) {
+                    const allTasks = res.data.tasks;
+                    const firstUnfinishedIndex = allTasks.findIndex(task => !task.is_finished);
+                    setTasks(allTasks);
+                    setCurrIndex(firstUnfinishedIndex !== -1 ? firstUnfinishedIndex : null);
+                    if (firstUnfinishedIndex !== -1) {
+                        setTimeLeft(allTasks[firstUnfinishedIndex].duration * 60);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch tasks", error);
+            }
+        }
 
-  const [firstTask, setFirstTask] = useState(null);
-  const [taskDuration, setTaskDuration] = useState(null);
+        if (userID) {
+            fetchTasks();
+        }
+    }, [userID]);
 
-  function onNextTask() {
-    if (currIndex + 1 < tasks.length) {
-      setCurrIndex(currIndex + 1);
-    } else {
-      alert("You finised all your tasks!");
-    }
-  }
-
-  /* const fetchOneTask = async() => {
-    const user_id = localStorage.getItem("id");
-    const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
-      user_id }
-    );
-    setFirstTask(response.data.tasks[6] || null);
-  };
-
-  useEffect(() => { fetchOneTask(); }, []);
-  
-  useEffect(() => {
-    const fetchTaskDuration = async () => {
-      try {
-        const user_id = localStorage.getItem("id");
-        const response = await axios.post("http://localhost:3000/tasks/get-shortterm", {
-          user_id }
-        );
-        const taskMinutes = response.data.tasks[6]?.duration || 25;
-        setTimeLeft(taskMinutes * 60);
-      } catch (err) {
-        console.log("Using default timer (25min)");
-      }
+    // Timer presets for Breaks and Focus Time
+    const timerPresets = {
+        'Focus Time': currentTask ? currentTask.duration * 60 : null,
+        'Short Break': 300,
+        'Long Break': 900
     };
-    fetchTaskDuration();
-  }, []);
 
-  useEffect(() => {
-    if (taskDuration) {
-      setTimeLeft(taskDuration);
-      setActiveTab('Task Duration');
-    }
-  }, [taskDuration]);
+    // Timer logic
+    useEffect(() => {
+        let interval;
+        if (isRunning) {
+            interval = setInterval(() => {
+                setTimeLeft((prev) => {
+                    if (prev <= 0) {
+                        clearInterval(interval);
+                        setIsRunning(false);
+                        if (activeTab === 'Focus Time') {
+                            markTaskAsFinished().then(() => setNextTask());
+                        } else if (activeTab === 'Short Break') {
+                            setTimeLeft(timerPresets["Short Break"]);
+                        } else if (activeTab === 'Long Break') {
+                            setTimeLeft(timerPresets["Long Break"]);
+                        }
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [isRunning]);
 
-  useEffect(() => {
-    if (tasks.some(task => task.date === "longterm")) {
-      console.error("Long-term task leaked!"); // vo slucaj da ebi db nes
-    }
-  }, [tasks]);
- */
+    // Mark current task as finished via API
+    const markTaskAsFinished = async () => {
+        const current = tasks[currIndex];
+        if (current) {
+            try {
+                const updatedTasks = tasks.map((task, index) => index === currIndex ? {
+                    ...task, is_finished: true
+                } : task);
+                setTasks(updatedTasks);
 
-  const timerPresets = {
-    'Focus Time': taskDuration || 1500,
-    'Short Break': 300,
-    'Long Break': 900
-  };
+                await axios.put(`http://localhost:3000/tasks/update-completion/${current.id}`);
 
-  useEffect(() => {
-    let interval;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 0) {
-            clearInterval(interval);
+                const hasUnfinishedTasks = updatedTasks.some(task => !task.is_finished);
+                setAllTasksFinished(!hasUnfinishedTasks);
+
+            } catch (error) {
+                console.error("Failed to mark task as finished:", error);
+                setTasks(tasks);
+            }
+        }
+    };
+
+    const setNextTask = () => {
+        const nextUnfinishedIndex = tasks.findIndex((task, index) => index > currIndex && !task.is_finished);
+
+        if (nextUnfinishedIndex !== -1) {
+            setCurrIndex(nextUnfinishedIndex);
+            setTimeLeft(tasks[nextUnfinishedIndex].duration * 60);
+        } else {
+            setCurrIndex(null);
+            setTimeLeft(null);
+            setActiveTab('Focus Time');
             setIsRunning(false);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isRunning]);
+        }
+    };
 
-  const formatTime = (totalSeconds) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  };
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setTimeLeft(timerPresets[tab]); // Automatically uses taskDuration if tab is 'Task Duration'
-    setIsRunning(false);
-    setIsEditing(false);
-  };
+    // Format time for display (MM:SS)
+    const formatTime = (totalSeconds) => {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    };
 
-  const handleSaveTime = () => {
-    const totalSeconds = (minutes * 60) + seconds;
-    if (totalSeconds > 0) {
-      setTimeLeft(totalSeconds);
-    }
-    setIsEditing(false);
-    setIsRunning(false);
-  };
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'Focus Time' && !currentTask) {
+            setTimeLeft(null);
+        } else {
+            setTimeLeft(timerPresets[tab]);
+        }
+        setIsRunning(false);
+    };
 
-  return (
-    <div className="dynamic-container">
-
-      <div className="startday-current-task">
-        <h2 className="task-text"> Current task </h2>
-
-        <div className="startday-tasks">
-          {currentTask ? (
-            <h3>{currentTask.title}</h3>
-          ) : (
-            <p>No tasks available</p>
-          )}
+    return (<div className="dynamic-container">
+        {/* Current Task Section */}
+        <div className="startday-current-task">
+            <h2 className="task-text">Current task</h2>
+            <div className="startday-tasks">
+                {currentTask ? (<h3>{currentTask.title}</h3>) : (<p>No tasks available</p>)}
+            </div>
         </div>
-      </div>
 
-    <div className="startday-container">
-      <div className="startday-tabs">
-        {Object.keys(timerPresets).map((tab) => (
-          <button
-            key={tab}
-            className={`startday-tab-button ${activeTab !== tab ? 'inactive' : ''}`}
-            onClick={() => handleTabChange(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <div className="startday-timer-display">
-        {formatTime(timeLeft)}
-      </div>
-
-      <div className="startday-button-container">
-        <button
-          className="startday-main-button"
-          style={{ backgroundColor: '#e74c3c', color: 'white' }}
-          onClick={() => setIsRunning(!isRunning)}
-        >
-          {isRunning ? 'PAUSE' : 'START'}
-        </button>
-
-        {!isEditing ? (
-          <button
-            className="startday-main-button"
-            style={{ backgroundColor: '#666', color: 'white' }}
-            onClick={() => {
-              const mins = Math.floor(timeLeft / 60);
-              const secs = timeLeft % 60;
-              setMinutes(mins);
-              setSeconds(secs);
-              setIsEditing(true);
-            }}
-          >
-            CHANGE TIME
-          </button>
-        ) : (
-          <div className="startday-edit-container">
-            <div className="startday-input-group">
-              <div className="startday-time-input-container">
-                <span className="startday-input-label">Minutes</span>
-                <input
-                  type="number"
-                  className="startday-time-input"
-                  value={minutes}
-                  onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
-                  min="0"
-                />
-              </div>
-              <div className="startday-time-input-container">
-                <span className="startday-input-label">Seconds</span>
-                <input
-                  type="number"
-                  className="startday-time-input"
-                  value={seconds}
-                  onChange={(e) => {
-                    let value = parseInt(e.target.value) || 0;
-                    value = Math.min(59, Math.max(0, value));
-                    setSeconds(value);
-                  }}
-                  min="0"
-                  max="59"
-                />
-              </div>
+        {/* Timer and Tab Controls */}
+        <div className="startday-container">
+            <div className="startday-tabs">
+                {Object.keys(timerPresets).map((tab) => (<button
+                    key={tab}
+                    className={`startday-tab-button ${activeTab !== tab ? 'inactive' : ''}`}
+                    onClick={() => handleTabChange(tab)}
+                >
+                    {tab}
+                </button>))}
             </div>
 
-            <div className="startday-action-buttons">
-              <button
-                className="startday-main-button"
-                style={{ backgroundColor: '#4CAF50', flex: 1, maxWidth: '120px' }}
-                onClick={handleSaveTime}
-              >
-                SAVE
-              </button>
-              <button
-                className="startday-main-button"
-                style={{ backgroundColor: '#666', flex: 1, maxWidth: '120px' }}
-                onClick={() => setIsEditing(false)}
-              >
-                CANCEL
-              </button>
+            <div className="startday-timer-display">
+                {timeLeft !== null ? formatTime(timeLeft) : "Finished for the day!"}
             </div>
-          </div>
-        )}
-      </div>
-    </div>
 
-      <div className="startday-current-task">
+            <div className="startday-button-container">
+                {activeTab === 'Focus Time' && allTasksFinished ? null : (<button
+                    className="startday-main-button"
+                    style={{backgroundColor: '#e74c3c', color: 'white'}}
+                    onClick={() => setIsRunning(!isRunning)}
+                    disabled={timeLeft === null}
+                >
+                    {isRunning ? 'PAUSE' : 'START'}
+                </button>)}
 
-        <div className="task-text">
-          Next Task
+            </div>
         </div>
 
-        <div className="startday-tasks">
-          {nextTask ? nextTask.title : "No more tasks"}
+        {/* Next Task Section */}
+        <div className="startday-current-task">
+            <div className="task-text">
+                Next Task
+            </div>
+
+            <div className="startday-tasks">
+                {tasks.find((task, index) => index > currIndex && !task.is_finished) ?
+                    <h3>{tasks.find((task, index) => index > currIndex && !task.is_finished).title}</h3> :
+                    <p className="no-tasks-message">No more tasks</p>}
+            </div>
         </div>
-
-      </div>
-
-    </div>
-  );
+    </div>);
 };
 
 export default Startday;
