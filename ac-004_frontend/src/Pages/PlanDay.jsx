@@ -1,14 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './Planday.css';
 import axios from "axios";
 
-function PlanDay({selectedDate}) {
+function PlanDay({ selectedDate }) {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState({
         title: '', priority: null, duration: ''
     });
-
 
     const [currentDate, setCurrentDate] = useState({
         day: "", month: "", year: "", formatted: ""
@@ -51,11 +50,11 @@ function PlanDay({selectedDate}) {
         // Use the provided selectedDate or default to the current date
         const date = selectedDate ? new Date(selectedDate) : new Date();
         const day = String(date.getDate()).padStart(2, "0");
-        const month = date.toLocaleString("en-US", {month: "long"}).toUpperCase();
+        const month = date.toLocaleString("en-US", { month: "long" }).toUpperCase();
         const month_num = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear().toString();
         const formatted = selectedDate || `${year}-${month_num}-${day}`;
-        setCurrentDate({day, month, year, formatted});
+        setCurrentDate({ day, month, year, formatted });
         fetchTasks(formatted);
     }, []);
 
@@ -68,11 +67,11 @@ function PlanDay({selectedDate}) {
         setNewTask({
             title: '', priority: null, duration: ''
         });
-        setTimeInput({hours: '', minutes: ''});
+        setTimeInput({ hours: '', minutes: '' });
     };
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setNewTask(prev => ({
             ...prev, [name]: value
         }));
@@ -94,6 +93,27 @@ function PlanDay({selectedDate}) {
         setTimeInput(prev => ({
             ...prev, [field]: value
         }));
+    };
+
+    const editTaskPriority = async (taskId, newPriority) => {
+        try {
+            const response = await axios.patch(`http://localhost:3000/tasks/${taskId}/priority`, {
+                priority: newPriority
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.data.success) {
+                console.log(response.data.message);
+                refreshTasks();  // update your UI or state
+            } else {
+                console.error(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error updating priority:', error);
+        }
     };
 
     const toggleTaskCompletion = async (id, currentStatus) => {
@@ -188,14 +208,27 @@ function PlanDay({selectedDate}) {
                         className="TaskCheckbox"
                     />
                     <span className="TaskName">
-                                    {task.title}: {task.priority}, {task.duration} minutes
-                                </span>
-                    <button
-                        className="DeleteButton"
-                        onClick={() => deleteTask(task.id)}
-                    >
-                        Delete
-                    </button>
+                        {task.title}: {task.priority}, {task.duration} minutes
+                    </span>
+                    <div className="for-row-edit">
+                        <button
+                            className="EditPriorityButton"
+                            onClick={() => {
+                                const newPriority = prompt('Enter new priority (Low, Medium, High):', task.priority);
+                                if (newPriority) {
+                                    editTaskPriority(task.id, newPriority);
+                                }
+                            }}
+                        >
+                            Edit Priority
+                        </button>
+                        <button
+                            className="DeleteButton"
+                            onClick={() => deleteTask(task.id)}
+                        >
+                            Delete
+                        </button>
+                    </div>
                 </li>))}
             </ul>)}
         </div>

@@ -413,19 +413,31 @@
 }
 
 .DeleteButton {
-    display: none; /* Hidden by default */
     background-color: #e74c3c;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 5px;
-    position: absolute; /* Positioning within the div */
     right: 10px;
 }
 
 .DeleteButton:hover {
     background-color: #c0392b; /* Darker shade on hover */
+}
+
+.for-row-edit {
+    display: absolute;
+}
+
+.EditPriorityButton {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    right: 10px;
 }
 
 .AddTaskSeparator {

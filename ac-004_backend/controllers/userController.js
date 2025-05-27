@@ -106,8 +106,8 @@ export const loginUser = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        console.error(id);
         const { name, surname, email, password } = req.body;
+        console.log("123");
 
         // Get user document reference
         const userRef = doc(db, 'users', id);

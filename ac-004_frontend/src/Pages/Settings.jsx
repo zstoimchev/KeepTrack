@@ -25,7 +25,9 @@ function Settings() {
             console.log(payload);
             console.log(formData);
             if (password.trim()) payload.password = password;
-
+            
+            console.log(localStorage.getItem('id'));
+            
             const response = await axios.put(
                 `http://localhost:3000/users/${localStorage.getItem('id')}`,
                 payload
