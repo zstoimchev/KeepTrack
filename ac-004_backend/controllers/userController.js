@@ -5,11 +5,13 @@ import {
     collection,
     doc,
     addDoc,
-    getDoc,
     getDocs,
+    getDoc,
+    updateDoc,
 } from 'firebase/firestore';
 
 const db = getFirestore(firebase);
+
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -98,5 +100,39 @@ export const loginUser = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ success: false, msg: "The server snapped..." });
+    }
+};
+
+export const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.error(id);
+        const { name, surname, email, password } = req.body;
+
+        // Get user document reference
+        const userRef = doc(db, 'users', id);
+
+        // Check if user exists
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+            return res.status(404).json({ success: false, msg: 'User not found' });
+        }
+
+        // Update fields
+        const updatedFields = { name, surname, email };
+        if (password) {
+            updatedFields.password = password; // Caution: consider hashing passwords if used for auth
+        }
+
+        await updateDoc(userRef, updatedFields);
+
+        // Return updated data
+        const updatedSnap = await getDoc(userRef);
+        const updatedUser = updatedSnap.data();
+
+        res.json({ success: true, user: { id, ...updatedUser } });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ success: false, msg: 'Error updating user' });
     }
 };

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // Add axios for API requests
 
-const Sidebar = ({onLogout}) => {
+const Sidebar = ({ onLogout }) => {
     const navigate = useNavigate();
 
     const [tasks, setTasks] = useState([]);
@@ -11,14 +11,14 @@ const Sidebar = ({onLogout}) => {
     const [editedTaskName, setEditedTaskName] = useState("");
     const [editedTaskDuration, setEditedTaskDuration] = useState("");
 
-    const [currentDate, setCurrentDate] = useState({day: "", month: "", year: ""});
+    const [currentDate, setCurrentDate] = useState({ day: "", month: "", year: "" });
 
     useEffect(() => {
         const date = new Date();
         const day = date.getDate().toString();
-        const month = date.toLocaleString("en-US", {month: "long"}).toUpperCase();
+        const month = date.toLocaleString("en-US", { month: "long" }).toUpperCase();
         const year = date.getFullYear().toString();
-        setCurrentDate({day, month, year});
+        setCurrentDate({ day, month, year });
     }, []);
 
     const fetchTasks = async () => {
@@ -46,7 +46,7 @@ const Sidebar = ({onLogout}) => {
     };
 
     const addTask = () => {
-        const newTask = {name: "", duration: "", date: "long-term"};
+        const newTask = { name: "", duration: "", date: "long-term" };
         setTasks([...tasks, newTask]);
         setEditingIndex(tasks.length);
         setEditedTaskName("");
@@ -76,7 +76,7 @@ const Sidebar = ({onLogout}) => {
             return;
         }
 
-        const taskToSave = {...tasks[index], name: editedTaskName, duration: editedTaskDuration};
+        const taskToSave = { ...tasks[index], name: editedTaskName, duration: editedTaskDuration };
 
         if (taskToSave.id) {
             // Existing task: Update it
@@ -123,6 +123,10 @@ const Sidebar = ({onLogout}) => {
         setEditedTaskDuration("");
     };
 
+    const handleSettings = () => {
+        navigate('/settings');
+    };
+
     const toggleTaskCompletion = (index) => {
         const updatedTasks = [...tasks];
         updatedTasks[index] = {
@@ -132,80 +136,79 @@ const Sidebar = ({onLogout}) => {
     };
 
     return (
-    <div className="sidebar">
-        <div className="user-section">
-            <div className="user-icon"></div>
-            <p>{localStorage.getItem("name") || "User"}</p>
-        </div>
-        <div className="tasks-section">
-            <p>Long-Term Tasks</p>
-            <div className="task-container">
-                {tasks.map((task, i) => (<div key={i} className="task">
-                    {editingIndex === i ? (<>
-                        <div className="input-container">
+        <div className="sidebar">
+            <div className="user-section">
+                <div className="user-icon"></div>
+                <p>{localStorage.getItem("name") || "User"}</p>
+            </div>
+            <div className="tasks-section">
+                <p>Long-Term Tasks</p>
+                <div className="task-container">
+                    {tasks.map((task, i) => (<div key={i} className="task">
+                        {editingIndex === i ? (<>
+                            <div className="input-container">
+                                <input
+                                    type="text"
+                                    value={editedTaskName}
+                                    placeholder="Task Name"
+                                    onChange={(e) => setEditedTaskName(e.target.value)} />
+                                <input
+                                    type="text"
+                                    value={editedTaskDuration}
+                                    placeholder="Task Duration"
+                                    onChange={(e) => setEditedTaskDuration(e.target.value)} />
+                            </div>
+                            <div className="edit-buttons">
+                                <button onClick={() => saveTask(i)} className="save-task">
+                                    💾
+                                </button>
+                                <button onClick={() => cancelTask(i)} className="cancel-task">
+                                    ❌
+                                </button>
+                            </div>
+                        </>) : (<>
                             <input
-                                type="text"
-                                value={editedTaskName}
-                                placeholder="Task Name"
-                                onChange={(e) => setEditedTaskName(e.target.value)}/>
-                            <input
-                                type="text"
-                                value={editedTaskDuration}
-                                placeholder="Task Duration"
-                                onChange={(e) => setEditedTaskDuration(e.target.value)}/>
-                        </div>
-                        <div className="edit-buttons">
-                            <button onClick={() => saveTask(i)} className="save-task">
-                                💾
-                            </button>
-                            <button onClick={() => cancelTask(i)} className="cancel-task">
+                                type="checkbox"
+                                checked={task.completed || false}
+                                onChange={() => toggleTaskCompletion(i)}
+                                className="task-checkbox" />
+                            <button
+                                className="remove-task"
+                                onClick={() => removeTask(i)}>
                                 ❌
                             </button>
-                        </div>
-                    </>) : (<>
-                        <input
-                            type="checkbox"
-                            checked={task.completed || false}
-                            onChange={() => toggleTaskCompletion(i)}
-                            className="task-checkbox"/>
-                        <button
-                            className="remove-task"
-                            onClick={() => removeTask(i)}>
-                            ❌
-                        </button>
-                        <div
-                            className="task-details"
-                            style={{textAlign: "left", flexGrow: 1}}>
-                            <div className="task-name">Task: {task.title}</div>
-                            <div className="task-duration">Due date: {task.duration}</div>
-                        </div>
-                        <button
-                            className="edit-task"
-                            onClick={() => startEditing(i)}>
-                            ✏️
-                        </button>
-                    </>)}
-                </div>))}
+                            <div
+                                className="task-details"
+                                style={{ textAlign: "left", flexGrow: 1 }}>
+                                <div className="task-name">Task: {task.title}</div>
+                                <div className="task-duration">Due date: {task.duration}</div>
+                            </div>
+                            <button
+                                className="edit-task"
+                                onClick={() => startEditing(i)}>
+                                ✏️
+                            </button>
+                        </>)}
+                    </div>))}
+                </div>
+                <div className="button-section" onClick={addTask}>
+                    <p>+ Add new</p>
+                </div>
             </div>
-            <div className="button-section" onClick={addTask}>
-                <p>+ Add new</p>
-            </div>
-        </div>
 
-        <div className="date-section">
-            <p className="date-day-xl">{currentDate.day}</p>
-            <div className="date-month-year-group">
-                <p className="date-month-bold">{currentDate.month}</p>
-                <p className="date-year-subtle">{currentDate.year}</p>
+            <div className="date-section">
+                <p className="date-day-xl">{currentDate.day}</p>
+                <div className="date-month-year-group">
+                    <p className="date-month-bold">{currentDate.month}</p>
+                    <p className="date-year-subtle">{currentDate.year}</p>
+                </div>
             </div>
-        </div>
 
-        <div className="button-section">
-            {/*<p onClick={() => window.location.href = '/settings'}>SETTINGS</p>*/}
-            <Link to="/settings" className="button-section">SETTINGS</Link> {/* TODO: add hover effect */}
-            <p className="button-section" onClick={handleLogout}>LOG OUT</p>
-        </div>
-    </div>);
+            <div className="button-section">
+                <p className="button-section" onClick={handleSettings}>Settings</p>
+                <p className="button-section" onClick={handleLogout}>Log Out</p>
+            </div>
+        </div>);
 };
 
 export default Sidebar;

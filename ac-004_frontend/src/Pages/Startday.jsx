@@ -136,9 +136,10 @@ const Startday = ({userID}) => {
     return (<div className="dynamic-container">
         {/* Current Task Section */}
         <div className="startday-current-task">
-            <h2 className="task-text">Current task</h2>
+            <h2 className="task-text">Current task:</h2>
             <div className="startday-tasks">
-                {currentTask ? (<h3>{currentTask.title}</h3>) : (<p>No tasks available</p>)}
+                {currentTask ? (<h3>{currentTask.title}</h3>) 
+                : (<p className="task-text-spot">No Tasks have been Added.</p>)}
             </div>
         </div>
 
@@ -174,13 +175,13 @@ const Startday = ({userID}) => {
         {/* Next Task Section */}
         <div className="startday-current-task">
             <div className="task-text">
-                Next Task
+                Next Task:
             </div>
 
             <div className="startday-tasks">
                 {tasks.find((task, index) => index > currIndex && !task.is_finished) ?
                     <h3>{tasks.find((task, index) => index > currIndex && !task.is_finished).title}</h3> :
-                    <p className="no-tasks-message">No more tasks</p>}
+                    <p className="task-text-spot">Plan your Tasks to see them Here.</p>}
             </div>
         </div>
     </div>);
