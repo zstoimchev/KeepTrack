@@ -166,7 +166,7 @@ const taskModel = {
     updateTaskPriorityById: async (id, priority) => {
     try {
         const taskDoc = doc(db, 'tasks', id);
-        const result = await updateDoc(taskDoc, { priority });
+        await updateDoc(taskDoc, { priority });
         return { success: true, message: `Priority updated to ${priority}` };
     } catch (err) {
         throw new Error('Error updating priority: ' + err.message);
