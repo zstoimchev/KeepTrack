@@ -2,11 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import db from './DB/queries.js';
-import users from './routes/users.js';
-import tasks from './routes/tasks.js';
-
-import config from './config.js'
 import userRoute from './routes/userRoute.js';
 import taskRoute from './routes/taskRoute.js';
 
@@ -14,13 +9,16 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
-app.use(
-    cors({
-        methods: ['GET', 'POST', 'DELETE', 'PUT'],
-        credentials: true,
-        origin: ['http://localhost:5173'],
-    })
-);
+
+const corsOptions = {
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS'],
+    credentials: true,
+    origin: ['http://localhost:5173'],
+};
+
+app.use(cors(corsOptions));
+
+app.options('*',cors(corsOptions));
 
 // Use your routers
 app.use('/users', userRoute);

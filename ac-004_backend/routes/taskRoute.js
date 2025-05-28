@@ -9,7 +9,8 @@ import {
     getLongTermTasks,
     updateLongTermTask,
     getShortTermByUserId,
-    updateTaskFinished
+    updateTaskFinished,
+    updateTaskPriority
 } from '../controllers/taskController.js';
 
 const tasks = express.Router();
@@ -24,5 +25,6 @@ tasks.get('/long-term/all/:id', getLongTermTasks);
 tasks.put('/long-term/update/:id', updateLongTermTask);
 tasks.get('/short-term/:id', getShortTermByUserId);
 tasks.put('/tasks/:id/finish', updateTaskFinished);
+tasks.patch('/:id/priority', updateTaskPriority);
 
 export default tasks;

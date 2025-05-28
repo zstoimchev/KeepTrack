@@ -147,3 +147,20 @@ export const updateTaskFinished = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Error updating task: ' + error.message });
   }
 };
+
+export const updateTaskPriority = async (req, res) => {
+    const { id } = req.params;
+    const { priority } = req.body;
+
+    const validPriorities = ['Low', 'Medium', 'High'];
+    if (!validPriorities.includes(priority)) {
+        return res.status(400).json({ success: false, message: 'Invalid priority. Must be Low, Medium, or High.' });
+    }
+
+    try {
+        const result = await taskModel.updateTaskPriorityById(id, priority);
+        return res.json({ success: true, message: result.message });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};

@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './Startday.css';
 import axios from "axios";
 
-const Startday = ({userID}) => {
+const Startday = ({ userID }) => {
 
     const [activeTab, setActiveTab] = useState('Focus Time');
     const [timeLeft, setTimeLeft] = useState(1500);
@@ -14,6 +14,8 @@ const Startday = ({userID}) => {
     const currentTask = tasks.find((task, index) => index === currIndex && !task.is_finished);
 
     const [allTasksFinished, setAllTasksFinished] = useState(false);
+
+    const [savedFocusTimeLeft, setSavedFocusTimeLeft] = useState(null);
 
     // Fetch tasks for the day
     useEffect(() => {
@@ -124,21 +126,28 @@ const Startday = ({userID}) => {
     };
 
     const handleTabChange = (tab) => {
-        setActiveTab(tab);
-        if (tab === 'Focus Time' && !currentTask) {
-            setTimeLeft(null);
+    setActiveTab(tab);
+    if (tab === 'Focus Time') {
+        if (savedFocusTimeLeft !== null) {
+            setTimeLeft(savedFocusTimeLeft);  // Resume from where paused
+        } else if (currentTask) {
+            setTimeLeft(currentTask.duration * 60);  // New task start
         } else {
-            setTimeLeft(timerPresets[tab]);
+            setTimeLeft(null);
         }
-        setIsRunning(false);
-    };
+    } else {
+        setTimeLeft(timerPresets[tab]);  // Short or Long Break
+    }
+    setIsRunning(false);
+};
 
     return (<div className="dynamic-container">
         {/* Current Task Section */}
         <div className="startday-current-task">
-            <h2 className="task-text">Current task</h2>
+            <h2 className="task-text">Current task:</h2>
             <div className="startday-tasks">
-                {currentTask ? (<h3>{currentTask.title}</h3>) : (<p>No tasks available</p>)}
+                {currentTask ? (<h3>{currentTask.title}</h3>)
+                    : (<p className="task-text-spot">No Tasks have been Added.</p>)}
             </div>
         </div>
 
@@ -161,8 +170,16 @@ const Startday = ({userID}) => {
             <div className="startday-button-container">
                 {activeTab === 'Focus Time' && allTasksFinished ? null : (<button
                     className="startday-main-button"
-                    style={{backgroundColor: '#e74c3c', color: 'white'}}
-                    onClick={() => setIsRunning(!isRunning)}
+                    style={{ backgroundColor: '#e74c3c', color: 'white' }}
+                    onClick={() => {
+                        if (isRunning) {
+                            // Pause pressed, save timeLeft
+                            if (activeTab === 'Focus Time') {
+                                setSavedFocusTimeLeft(timeLeft);
+                            }
+                        }
+                        setIsRunning(!isRunning);
+                    }}
                     disabled={timeLeft === null}
                 >
                     {isRunning ? 'PAUSE' : 'START'}
@@ -174,13 +191,13 @@ const Startday = ({userID}) => {
         {/* Next Task Section */}
         <div className="startday-current-task">
             <div className="task-text">
-                Next Task
+                Next Task:
             </div>
 
             <div className="startday-tasks">
                 {tasks.find((task, index) => index > currIndex && !task.is_finished) ?
                     <h3>{tasks.find((task, index) => index > currIndex && !task.is_finished).title}</h3> :
-                    <p className="no-tasks-message">No more tasks</p>}
+                    <p className="task-text-spot">Plan your Tasks to see them Here.</p>}
             </div>
         </div>
     </div>);
